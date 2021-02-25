@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class ORMModel(BaseModel):
     id: int
 
