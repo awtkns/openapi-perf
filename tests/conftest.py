@@ -1,7 +1,7 @@
 import pytest
 import uvicorn
 
-from tests.contrib import implementations
+from contrib import implementations
 
 
 @pytest.fixture(params=implementations, autouse=True, scope='session')
