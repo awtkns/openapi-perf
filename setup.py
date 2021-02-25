@@ -5,8 +5,7 @@ VERSION = '0.0.1'
 setup(
     name='openapi-perf',
     version=VERSION,
-    author='Adam Watkins',
-    author_email='cadamrun@gmail.com',
+    author='Adam Watkins, Ethan Haid',
     packages=find_packages(exclude=('tests')),
     url='https://github.com/awtkns/openapi-perf',
     license='MIT',
@@ -20,7 +19,7 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3 :: Only"
+        "Programming Language :: Python :: 3 :: Only",
         "Development Status :: 1 - Planning",
         "Environment :: Web Environment",
         "Framework :: AsyncIO",

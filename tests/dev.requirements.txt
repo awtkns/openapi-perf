@@ -1,1 +1,5 @@
 pytest
+uvicorn
+sqlalchemy
+fastapi
+fastapi_crudrouter
