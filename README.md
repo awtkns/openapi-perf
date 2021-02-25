@@ -1,4 +1,4 @@
-<h1 align="center">OpenAPI-Perf</h1>
+<h3 align="center">OpenAPI-Perf</h3>
 <p align="center">
 <em>An Automatic REST Endpoint Performance Test Generation Suite</em>
 </p>
