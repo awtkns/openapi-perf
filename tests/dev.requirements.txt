@@ -4,3 +4,6 @@ uvicorn
 sqlalchemy
 fastapi
 fastapi_crudrouter
+
+async-generator; python_version=='3.6'
+async-async-exit-stack ; python_version=='3.6'
