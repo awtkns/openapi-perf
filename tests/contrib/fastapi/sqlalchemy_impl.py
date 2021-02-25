@@ -43,5 +43,5 @@ class CarrotModel(Base):
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
-app.include_router(SQLAlchemyCRUDRouter(schema=Potato, db_model=PotatoModel, db=session, prefix='potato'))
-app.include_router(SQLAlchemyCRUDRouter(schema=Carrot, db_model=CarrotModel, db=session, prefix='carrot'))
+app.include_router(SQLAlchemyCRUDRouter(schema=Potato, db_model=PotatoModel, db=session))
+app.include_router(SQLAlchemyCRUDRouter(schema=Carrot, db_model=CarrotModel, db=session))

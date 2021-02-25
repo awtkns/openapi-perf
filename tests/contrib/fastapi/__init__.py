@@ -1,8 +1,8 @@
-from . import sqlalchemy_impl
 from ._server import Server
 
-implementations = [
-    sqlalchemy_impl.app
-]
+from . import sqlalchemy_impl, memory_impl
 
-implementations = [Server(app) for app in implementations]
+implementations = [Server(app) for app in [
+    sqlalchemy_impl.app,
+    memory_impl.app
+]]
