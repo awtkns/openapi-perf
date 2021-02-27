@@ -18,4 +18,4 @@ pip install openapi-perf
 ```
 
 ## Usage
-Comming soon
+Coming soon
