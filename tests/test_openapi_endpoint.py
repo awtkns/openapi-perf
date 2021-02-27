@@ -6,4 +6,6 @@ def test_schema_endpoint_exists():
 
     assert res.status_code == 200
     assert res.json()
+
+    print(res.json())
     assert res.json()['paths']
