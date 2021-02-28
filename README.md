@@ -7,7 +7,11 @@
 </p>
 <p align="center">
 <img alt="Tests" src="https://github.com/awtkns/openapi-perf/workflows/Tests/badge.svg" />
-<img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/openapi-perf" />
+<img alt="Docs" src="https://github.com/awtkns/fastapi-crudrouter/workflows/docs/badge.svg" />
+<a href="https://pypi.org/project/openapi-perf" target="_blank">
+  <img src="https://img.shields.io/pypi/v/openapi-perf?color=%2334D058&label=pypi%20package" alt="Package version">
+</a>
+<img alt=Python Version" src="https://img.shields.io/pypi/pyversions/openapi-perf?color=%2334D058" />
 </p>
 
 ---
