@@ -21,7 +21,6 @@ def test_generation():
     )
     results = op.run()
     print(results)
-    assert 1 == 2
 
     # op.tests = [t1, t2, t3]
 
