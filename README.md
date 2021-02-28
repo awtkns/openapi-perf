@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://openapi-perf.awtkns.com/assets/logo-light.png" alt="OpenAPI Perf Logo" />
 </p>
-<h1 align="center" style="margin-bottom: 0; color: black"><strong>OpenAPI Perf</strong></h1>
+<h3 align="center" style="margin-bottom: 0; color: black"><strong>OpenAPI Perf</strong></h3>
 <p align="center">
   🤖<em> Automatic OpenAPI Performance Testing </em>🤖</br>
 </p>
