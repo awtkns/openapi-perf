@@ -130,3 +130,7 @@ dmypy.json
 
 # Editors
 .idea
+/node_modules/
+*.db
+package.json
+package-lock.json

@@ -1,0 +1,31 @@
+site_name: OpenAPI Performance Testing
+repo_url: https://github.com/awtkns/openapi-perf
+repo_name: awtkns/openapi-perf
+edit_uri: ''
+
+theme:
+  name: material
+  palette:
+    primary: black
+    accent: amber
+  icon:
+    repo: fontawesome/brands/github-alt
+  logo: assets/logo.png
+  favicon: assets/logo.png
+  language: en
+
+nav:
+  - Overview: index.md
+
+markdown_extensions:
+  - extra
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+extra_css:
+  - css/main.css
+  - css/termynal.css
+extra_javascript:
+  - js/termynal.js
+  - js/termy.js
