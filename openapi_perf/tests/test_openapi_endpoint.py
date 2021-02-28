@@ -1,10 +1,11 @@
 from ..OpenAPIPerf import OpenAPIPerf
 import requests
 
-SCHEMA_URL = 'http://localhost:5000/openapi.json'
+ENDPOINT_URL = 'http://localhost:5000'
+SCHEMA_PATH = '/openapi.json'
 
 def test_schema_endpoint_exists():
-    res = requests.get(SCHEMA_URL)
+    res = requests.get(ENDPOINT_URL + SCHEMA_PATH)
 
     assert res.status_code == 200
     assert res.json()
@@ -15,8 +16,12 @@ def test_schema_endpoint_exists():
 
 def test_generation():
     op = OpenAPIPerf(
-        schema_url="SCHEMA_URL"
+        endpoint_url = ENDPOINT_URL,
+        schema_path = SCHEMA_PATH
     )
+    results = op.run()
+    print(results)
+    assert 1 == 2
 
     # op.tests = [t1, t2, t3]
 
