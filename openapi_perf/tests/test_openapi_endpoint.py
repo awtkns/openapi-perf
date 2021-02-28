@@ -1,5 +1,5 @@
+from ..OpenAPIPerf import OpenAPIPerf
 import requests
-from .. import OpenAPIPerf
 
 SCHEMA_URL = 'http://localhost:5000/openapi.json'
 
@@ -14,9 +14,9 @@ def test_schema_endpoint_exists():
 
 
 def test_generation():
-    # op = OpenAPIPerf(
-    #     schema_url=SCHEMA_URL
-    # )
+    op = OpenAPIPerf(
+        schema_url="SCHEMA_URL"
+    )
 
     # op.tests = [t1, t2, t3]
 
