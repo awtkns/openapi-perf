@@ -1,6 +1,7 @@
 import hypothesis
 import requests
 
+
 class OpenAPIPerf:
     REQ_TYPE_MAPPING = {
         "get": requests.get,

@@ -1,8 +1,9 @@
-from ..OpenAPIPerf import OpenAPIPerf
+from openapi_perf import OpenAPIPerf
 import requests
 
 ENDPOINT_URL = 'http://localhost:5000'
 SCHEMA_PATH = '/openapi.json'
+
 
 def test_schema_endpoint_exists():
     res = requests.get(ENDPOINT_URL + SCHEMA_PATH)
