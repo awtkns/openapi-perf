@@ -36,7 +36,7 @@ class OpenAPIPerf:
     @staticmethod
     def get_api_schema(url) -> dict:
         res = requests.get(url)
-        schema = res.json
+        schema = res.json()
 
         assert res.status_code == 200, f"Could bot reach schema endpoint {url}"
         assert schema, "No Schema was Found"
