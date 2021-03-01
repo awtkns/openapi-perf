@@ -1,9 +1,10 @@
 pytest
-requests
 uvicorn
 sqlalchemy
 fastapi
 fastapi_crudrouter
+requests
+hypothesis
 
 async-generator; python_version=='3.6'
 async-exit-stack; python_version=='3.6'

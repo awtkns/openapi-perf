@@ -1,7 +1,2 @@
-fastapi
-fastapi_crudrouter
-sqlalchemy
 requests
-pytest
-uvicorn
 hypothesis
