@@ -21,7 +21,6 @@ def test_generation():
         schema_path = SCHEMA_PATH
     )
     results = op.run()
-    print(results)
 
     # op.tests = [t1, t2, t3]
 

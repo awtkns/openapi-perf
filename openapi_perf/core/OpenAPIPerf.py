@@ -1,7 +1,6 @@
 from urllib.parse import urljoin
-
-# import hypothesis
 import requests
+from hypothesis import given, strategies as st
 
 REQ_TYPE_MAPPING = {
     "get": requests.get,
@@ -9,47 +8,82 @@ REQ_TYPE_MAPPING = {
     "put": requests.put,
     "delete": requests.delete
 }
-
+PARAM_TYPE_MAPPING = {
+    "integer": st.integers
+}
 
 class OpenAPIPerf:
-    schema = {}
     endpoint_url = ''
-    schema_url = ''
+    schema = {}
+    resolvedPathName = ''
 
-    def __init__(self, endpoint_url='', schema_path=''):
+    def __init__(self, endpoint_url='', schema_path='', generate=True):
         if not endpoint_url.startswith('http'):
             endpoint_url = "http://" + endpoint_url
-
         self.endpoint_url = endpoint_url
-        self.schema_url = urljoin(endpoint_url, schema_path)
+
+        schema_url = urljoin(endpoint_url, schema_path)
 
         try:
-            self.schema = self.get_api_schema(self.schema_url)
+            self.schema = self.get_api_schema(schema_url)
         except AssertionError:
-            if self.schema_url.endswith('.json'):
-                self.schema_url.removesuffix('.json')
+            if schema_url.endswith('.json'):
+                schema_url.removesuffix('.json')
             else:
-                self.schema_url = self.schema_url + '.json'
+                schema_url = schema_url + '.json'
 
-            self.schema = self.get_api_schema(self.schema_url)
+            self.schema = self.get_api_schema(schema_url)
+
+        if generate: self.generateTests()
 
     @staticmethod
     def get_api_schema(url) -> dict:
         res = requests.get(url)
         schema = res.json()
 
-        assert res.status_code == 200, f"Could bot reach schema endpoint {url}"
+        assert res.status_code == 200, f"Could not reach schema endpoint {url}"
         assert schema, "No Schema was Found"
 
         return schema
 
-    def run(self):
-        responseData = {}
+    # Generate the list of property-based tests
+    def generateTests(self):
+        def resolvePath(pathName, parameterName, parameterValue):
+            self.resolvedPathName = pathName.replace("{" + parameterName + "}", str(parameterValue))
 
         for pathName, pathData in self.schema['paths'].items():
             for reqType, reqData in pathData.items():
-                execute = REQ_TYPE_MAPPING[reqType]
-                response = execute(self.endpoint_url + pathName)
-                responseData[pathName + ': ' + reqType] = response
+                
+                self.resolvedPathName = pathName
+                if 'parameters' in reqData:
+                    for parameter in reqData['parameters']:
+                        if parameter['in'] == 'path':
+                            resolvePath = given(PARAM_TYPE_MAPPING[parameter['schema']['type']]())(self.resolvePath)
+                            resolvePath(pathName = pathName, parameterName = parameter['name'])
+                        
+                        # TODO: support parameters which are not part of path
+
+                self.schema['paths'][pathName][reqType]['x-tests'] = [{"path": self.resolvedPathName, "data": 0}]
+
+    # Run tests and return results
+    def run(self):
+
+        responseData = []
+
+        # TODO: multi-thread this
+        for pathName, pathData in self.schema['paths'].items():
+            for reqType, reqData in pathData.items():
+
+                assert 'x-tests' in reqData, f'Test data not generated'
+                for test in reqData['x-tests']:
+                    execute = REQ_TYPE_MAPPING[reqType]
+                    response = execute(urljoin(self.endpoint_url, test['path']))
+                    responseData.append(response)
 
         return responseData
+
+    @staticmethod
+    def resolvePath(pathName, parameterName, parameterValue):
+        #self.resolvedPathName = pathName.replace("{" + parameterName + "}", str(parameterValue))
+        resolvedPathName = pathName.replace("{" + parameterName + "}", str(parameterValue))
+        
