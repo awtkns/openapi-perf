@@ -1,4 +1,6 @@
 from urllib.parse import urljoin
+from os import path, mkdir
+import json
 import requests
 from hypothesis import given, strategies as st
 
@@ -13,12 +15,12 @@ PARAM_TYPE_MAPPING = {
 }
 
 class OpenAPIPerf:
-    endpoint_url = ''
+    endpoint_url: str
     schema = {}
 
-    resolved_path_name = ''
+    resolved_path_name: str
 
-    def __init__(self, endpoint_url='', schema_path='', generate=True):
+    def __init__(self, endpoint_url: str, schema_path: str, results_dir: str = None):
         if not endpoint_url.startswith('http'):
             endpoint_url = "http://" + endpoint_url
         self.endpoint_url = endpoint_url
@@ -35,10 +37,17 @@ class OpenAPIPerf:
 
             self.schema = self.get_api_schema(schema_url)
 
-        if generate: self.generate_tests()
+        self.generate_tests()
+
+        if results_dir != None:
+            if not path.exists(results_dir):
+                mkdir(results_dir)
+                
+            with open(results_dir + '/extended_schema.json', 'w') as out:
+                json.dump(self.schema, out)
 
     @staticmethod
-    def get_api_schema(url) -> dict:
+    def get_api_schema(url: str) -> dict:
         res = requests.get(url)
         schema = res.json()
 
@@ -67,12 +76,11 @@ class OpenAPIPerf:
 
     # Replace token in path with a value
     @staticmethod # needed for hypothesis @given to function properly
-    def resolve_path(self, path_name, parameter_name, parameter_value):
+    def resolve_path(self, path_name: str, parameter_name: str, parameter_value):
         self.resolved_path_name = path_name.replace("{" + parameter_name + "}", str(parameter_value))
 
     # Run tests and return results
     def run(self):
-
         response_data = []
 
         # TODO: multi-thread this

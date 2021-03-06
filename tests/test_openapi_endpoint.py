@@ -1,4 +1,5 @@
 from openapi_perf import OpenAPIPerf
+import pathlib
 import requests
 
 ENDPOINT_URL = 'http://localhost:5000'
@@ -18,7 +19,8 @@ def test_schema_endpoint_exists():
 def test_generation():
     op = OpenAPIPerf(
         endpoint_url = ENDPOINT_URL,
-        schema_path = SCHEMA_PATH
+        schema_path = SCHEMA_PATH,
+        results_dir = str(pathlib.Path(__file__).parent.absolute()) + "/sample_results"
     )
     results = op.run()
 
