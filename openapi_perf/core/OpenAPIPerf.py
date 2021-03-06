@@ -58,8 +58,8 @@ class OpenAPIPerf:
                 if 'parameters' in reqData:
                     for parameter in reqData['parameters']:
                         if parameter['in'] == 'path':
-                            resolvePath = given(PARAM_TYPE_MAPPING[parameter['schema']['type']]())(self.resolvePath)
-                            resolvePath(pathName = pathName, parameterName = parameter['name'])
+                            resolvePathWithStrategy = given(PARAM_TYPE_MAPPING[parameter['schema']['type']]())(self.resolvePath)
+                            resolvePathWithStrategy(self, pathName, parameter['name'])
                         
                         # TODO: support parameters which are not part of path
 
@@ -76,14 +76,16 @@ class OpenAPIPerf:
 
                 assert 'x-tests' in reqData, f'Test data not generated'
                 for test in reqData['x-tests']:
+                    print(test['path'])
                     execute = REQ_TYPE_MAPPING[reqType]
                     response = execute(urljoin(self.endpoint_url, test['path']))
                     responseData.append(response)
 
         return responseData
 
+    # Replace token in path with a value
     @staticmethod
-    def resolvePath(pathName, parameterName, parameterValue):
-        #self.resolvedPathName = pathName.replace("{" + parameterName + "}", str(parameterValue))
-        resolvedPathName = pathName.replace("{" + parameterName + "}", str(parameterValue))
+    def resolvePath(self, pathName, parameterName, parameterValue):
+        self.resolvedPathName = pathName.replace("{" + parameterName + "}", str(parameterValue))
+        
         
