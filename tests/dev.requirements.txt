@@ -4,6 +4,7 @@ sqlalchemy
 fastapi
 fastapi_crudrouter
 requests
+pandas
 hypothesis
 
 async-generator; python_version=='3.6'

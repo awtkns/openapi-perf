@@ -1,6 +1,7 @@
 from openapi_perf import OpenAPIPerf
 import pathlib
 import requests
+import pandas as pd
 
 ENDPOINT_URL = 'http://localhost:5000'
 SCHEMA_PATH = '/openapi.json'
@@ -23,6 +24,10 @@ def test_generation():
         results_dir = str(pathlib.Path(__file__).parent.absolute()) + "/sample_results"
     )
     results = op.run()
+
+    pd.set_option('display.max_columns', None)
+    print(pd.DataFrame(results))
+    
 
     # op.tests = [t1, t2, t3]
 

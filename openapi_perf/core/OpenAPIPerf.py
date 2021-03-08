@@ -2,6 +2,7 @@ from urllib.parse import urljoin
 from os import path, mkdir
 import json
 import requests
+import time
 from hypothesis import given, settings, strategies as st
 
 REQ_TYPE_MAPPING = {
@@ -11,7 +12,7 @@ REQ_TYPE_MAPPING = {
     "delete": requests.delete
 }
 PARAM_TYPE_MAPPING = {
-    "integer": st.integers
+    "integer": st.integers()
 }
 
 class OpenAPIPerf:
@@ -86,7 +87,7 @@ class OpenAPIPerf:
     @settings(max_examples=50)
     def resolve_path(self, path_name: str, tokens: [(str, str)], data):
         for token_name, token_type in tokens:
-            replacement = data.draw(PARAM_TYPE_MAPPING[token_type](), label = token_name)
+            replacement = data.draw(PARAM_TYPE_MAPPING[token_type], label = token_name)
             path_name = path_name.replace("{" + token_name + "}", str(replacement))
 
         self.resolved_paths.append(path_name)
@@ -102,7 +103,17 @@ class OpenAPIPerf:
                 
                 execute = REQ_TYPE_MAPPING[req_type]
                 for test in req_data['x-tests']:
+                    tic = time.perf_counter()
                     response = execute(urljoin(self.endpoint_url, test['path']))
-                    response_data.append(response)
+                    toc = time.perf_counter()
+
+                    print(req_data['responses'])
+
+                    response_data.append({
+                        'path':     test['path'],
+                        'response': response,
+                        'validity': str(response.status_code) in req_data['responses'],
+                        'time':     toc - tic
+                    })
 
         return response_data
