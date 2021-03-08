@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 from os import path, mkdir
 import json
 import requests
-from hypothesis import given, strategies as st
+from hypothesis import given, settings, strategies as st
 
 REQ_TYPE_MAPPING = {
     "get": requests.get,
@@ -18,7 +18,7 @@ class OpenAPIPerf:
     endpoint_url: str
     schema = {}
 
-    resolved_path_name: str
+    resolved_paths = []
 
     def __init__(self, endpoint_url: str, schema_path: str, results_dir: str = None):
         if not endpoint_url.startswith('http'):
@@ -60,24 +60,36 @@ class OpenAPIPerf:
     def generate_tests(self):
         for path_name, path_data in self.schema['paths'].items():
             for req_type, req_data in path_data.items():
+                if 'x-tests' in req_data:
+                    print("tests already found, skipping") # TODO: put this in a logfile
+                    continue
+                self.schema['paths'][path_name][req_type]['x-tests'] = []
                 
-                self.resolved_path_name = path_name
+                path_tokens = []
+                self.resolved_paths = []
                 if 'parameters' in req_data:
                     for parameter in req_data['parameters']:
                         if parameter['in'] == 'path':
-                            strategy = PARAM_TYPE_MAPPING[parameter['schema']['type']]()
-                            resolve_path_with_strategy = given(strategy)(self.resolve_path)
-                            resolve_path_with_strategy(self, path_name, parameter['name'])
-                        
+                            path_tokens.append((parameter['name'], parameter['schema']['type']))
+                            
                         # TODO: support parameters which are not part of path
 
-                # Save test to schema
-                self.schema['paths'][path_name][req_type]['x-tests'] = [{"path": self.resolved_path_name, "data": 0}]
+                resolve_path_with_strategies = given(st.data())(self.resolve_path)
+                resolve_path_with_strategies(self, path_name, path_tokens)
 
-    # Replace token in path with a value
+                # Save test to schema
+                x_tests = list(map(lambda path, data: {"path": path, "data": data}, self.resolved_paths, self.resolved_paths))
+                self.schema['paths'][path_name][req_type]['x-tests'] = x_tests
+
+    # Replace tokens in path with generated values
     @staticmethod # needed for hypothesis @given to function properly
-    def resolve_path(self, path_name: str, parameter_name: str, parameter_value):
-        self.resolved_path_name = path_name.replace("{" + parameter_name + "}", str(parameter_value))
+    @settings(max_examples=50)
+    def resolve_path(self, path_name: str, tokens: [(str, str)], data):
+        for token_name, token_type in tokens:
+            replacement = data.draw(PARAM_TYPE_MAPPING[token_type](), label = token_name)
+            path_name = path_name.replace("{" + token_name + "}", str(replacement))
+
+        self.resolved_paths.append(path_name)
 
     # Run tests and return results
     def run(self):
@@ -86,11 +98,10 @@ class OpenAPIPerf:
         # TODO: multi-thread this
         for path_name, path_data in self.schema['paths'].items():
             for req_type, req_data in path_data.items():
-
-                assert 'x-tests' in req_data, f'Test data not generated'
+                assert 'x-tests' in req_data, f'Test data for {path_name} {req_type} not generated'
+                
+                execute = REQ_TYPE_MAPPING[req_type]
                 for test in req_data['x-tests']:
-                    print(test['path'])
-                    execute = REQ_TYPE_MAPPING[req_type]
                     response = execute(urljoin(self.endpoint_url, test['path']))
                     response_data.append(response)
 
