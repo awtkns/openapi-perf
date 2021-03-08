@@ -1,1 +1,1830 @@
-{"openapi": "3.0.2", "info": {"title": "FastAPI", "version": "0.1.0"}, "paths": {"/potato": {"get": {"tags": ["Potato"], "summary": "Get All", "operationId": "route_potato_get", "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"title": "Response Route Potato Get", "type": "array", "items": {"$ref": "#/components/schemas/Potato"}}}}}}, "x-tests": [{"path": "/potato", "data": 0}]}, "post": {"tags": ["Potato"], "summary": "Create One", "operationId": "route_potato_post", "requestBody": {"content": {"application/json": {"schema": {"$ref": "#/components/schemas/Potato"}}}, "required": true}, "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Potato"}}}}, "422": {"description": "Validation Error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HTTPValidationError"}}}}}, "x-tests": [{"path": "/potato", "data": 0}]}, "delete": {"tags": ["Potato"], "summary": "Delete All", "operationId": "route_potato_delete", "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"title": "Response Route Potato Delete", "type": "array", "items": {"$ref": "#/components/schemas/Potato"}}}}}}, "x-tests": [{"path": "/potato", "data": 0}]}}, "/potato/{item_id}": {"get": {"tags": ["Potato"], "summary": "Get One", "operationId": "route_potato__item_id__get", "parameters": [{"required": true, "schema": {"title": "Item Id", "type": "integer"}, "name": "item_id", "in": "path"}], "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Potato"}}}}, "422": {"description": "Validation Error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HTTPValidationError"}}}}}, "x-tests": [{"path": "/potato/-86", "data": 0}]}, "put": {"tags": ["Potato"], "summary": "Update One", "operationId": "route_potato__item_id__put", "parameters": [{"required": true, "schema": {"title": "Item Id", "type": "integer"}, "name": "item_id", "in": "path"}], "requestBody": {"content": {"application/json": {"schema": {"$ref": "#/components/schemas/PotatoUpdate"}}}, "required": true}, "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Potato"}}}}, "422": {"description": "Validation Error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HTTPValidationError"}}}}}, "x-tests": [{"path": "/potato/-21", "data": 0}]}, "delete": {"tags": ["Potato"], "summary": "Delete One", "operationId": "route_potato__item_id__delete", "parameters": [{"required": true, "schema": {"title": "Item Id", "type": "integer"}, "name": "item_id", "in": "path"}], "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Potato"}}}}, "422": {"description": "Validation Error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HTTPValidationError"}}}}}, "x-tests": [{"path": "/potato/1005", "data": 0}]}}, "/carrot": {"get": {"tags": ["Carrot"], "summary": "Get All", "operationId": "route_carrot_get", "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"title": "Response Route Carrot Get", "type": "array", "items": {"$ref": "#/components/schemas/Carrot"}}}}}}, "x-tests": [{"path": "/carrot", "data": 0}]}, "post": {"tags": ["Carrot"], "summary": "Create One", "operationId": "route_carrot_post", "requestBody": {"content": {"application/json": {"schema": {"$ref": "#/components/schemas/Carrot"}}}, "required": true}, "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Carrot"}}}}, "422": {"description": "Validation Error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HTTPValidationError"}}}}}, "x-tests": [{"path": "/carrot", "data": 0}]}, "delete": {"tags": ["Carrot"], "summary": "Delete All", "operationId": "route_carrot_delete", "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"title": "Response Route Carrot Delete", "type": "array", "items": {"$ref": "#/components/schemas/Carrot"}}}}}}, "x-tests": [{"path": "/carrot", "data": 0}]}}, "/carrot/{item_id}": {"get": {"tags": ["Carrot"], "summary": "Get One", "operationId": "route_carrot__item_id__get", "parameters": [{"required": true, "schema": {"title": "Item Id", "type": "integer"}, "name": "item_id", "in": "path"}], "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Carrot"}}}}, "422": {"description": "Validation Error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HTTPValidationError"}}}}}, "x-tests": [{"path": "/carrot/-14096", "data": 0}]}, "put": {"tags": ["Carrot"], "summary": "Update One", "operationId": "route_carrot__item_id__put", "parameters": [{"required": true, "schema": {"title": "Item Id", "type": "integer"}, "name": "item_id", "in": "path"}], "requestBody": {"content": {"application/json": {"schema": {"$ref": "#/components/schemas/CarrotUpdate"}}}, "required": true}, "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Carrot"}}}}, "422": {"description": "Validation Error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HTTPValidationError"}}}}}, "x-tests": [{"path": "/carrot/-23457", "data": 0}]}, "delete": {"tags": ["Carrot"], "summary": "Delete One", "operationId": "route_carrot__item_id__delete", "parameters": [{"required": true, "schema": {"title": "Item Id", "type": "integer"}, "name": "item_id", "in": "path"}], "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/Carrot"}}}}, "422": {"description": "Validation Error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HTTPValidationError"}}}}}, "x-tests": [{"path": "/carrot/112", "data": 0}]}}}, "components": {"schemas": {"Carrot": {"title": "Carrot", "required": ["length"], "type": "object", "properties": {"length": {"title": "Length", "type": "number"}, "color": {"title": "Color", "type": "string", "default": "Orange"}}}, "CarrotUpdate": {"title": "CarrotUpdate", "required": ["length", "color"], "type": "object", "properties": {"length": {"title": "Length", "type": "number"}, "color": {"title": "Color", "type": "string"}}}, "HTTPValidationError": {"title": "HTTPValidationError", "type": "object", "properties": {"detail": {"title": "Detail", "type": "array", "items": {"$ref": "#/components/schemas/ValidationError"}}}}, "Potato": {"title": "Potato", "required": ["thickness", "mass", "color", "type"], "type": "object", "properties": {"thickness": {"title": "Thickness", "type": "number"}, "mass": {"title": "Mass", "type": "number"}, "color": {"title": "Color", "type": "string"}, "type": {"title": "Type", "type": "string"}}}, "PotatoUpdate": {"title": "PotatoUpdate", "required": ["thickness", "mass", "color", "type"], "type": "object", "properties": {"thickness": {"title": "Thickness", "type": "number"}, "mass": {"title": "Mass", "type": "number"}, "color": {"title": "Color", "type": "string"}, "type": {"title": "Type", "type": "string"}}}, "ValidationError": {"title": "ValidationError", "required": ["loc", "msg", "type"], "type": "object", "properties": {"loc": {"title": "Location", "type": "array", "items": {"type": "string"}}, "msg": {"title": "Message", "type": "string"}, "type": {"title": "Error Type", "type": "string"}}}}}}
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/potato": {
+            "get": {
+                "tags": [
+                    "Potato"
+                ],
+                "summary": "Get All",
+                "operationId": "route_potato_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Route Potato Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Potato"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/potato",
+                        "data": "/potato"
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Potato"
+                ],
+                "summary": "Create One",
+                "operationId": "route_potato_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Potato"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Potato"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/potato",
+                        "data": "/potato"
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Potato"
+                ],
+                "summary": "Delete All",
+                "operationId": "route_potato_delete",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Route Potato Delete",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Potato"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/potato",
+                        "data": "/potato"
+                    }
+                ]
+            }
+        },
+        "/potato/{item_id}": {
+            "get": {
+                "tags": [
+                    "Potato"
+                ],
+                "summary": "Get One",
+                "operationId": "route_potato__item_id__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Item Id",
+                            "type": "integer"
+                        },
+                        "name": "item_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Potato"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/-27500",
+                        "data": "/potato/-27500"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/-7825582782052506401",
+                        "data": "/potato/-7825582782052506401"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/-90994462",
+                        "data": "/potato/-90994462"
+                    },
+                    {
+                        "path": "/potato/-31347",
+                        "data": "/potato/-31347"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/21558",
+                        "data": "/potato/21558"
+                    },
+                    {
+                        "path": "/potato/84",
+                        "data": "/potato/84"
+                    },
+                    {
+                        "path": "/potato/-801665773",
+                        "data": "/potato/-801665773"
+                    },
+                    {
+                        "path": "/potato/-23961",
+                        "data": "/potato/-23961"
+                    },
+                    {
+                        "path": "/potato/-93",
+                        "data": "/potato/-93"
+                    },
+                    {
+                        "path": "/potato/29",
+                        "data": "/potato/29"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/-30444",
+                        "data": "/potato/-30444"
+                    },
+                    {
+                        "path": "/potato/19130986372050059755818680452206321338",
+                        "data": "/potato/19130986372050059755818680452206321338"
+                    },
+                    {
+                        "path": "/potato/-26105",
+                        "data": "/potato/-26105"
+                    },
+                    {
+                        "path": "/potato/-29359",
+                        "data": "/potato/-29359"
+                    },
+                    {
+                        "path": "/potato/27734",
+                        "data": "/potato/27734"
+                    },
+                    {
+                        "path": "/potato/108",
+                        "data": "/potato/108"
+                    },
+                    {
+                        "path": "/potato/-26847",
+                        "data": "/potato/-26847"
+                    },
+                    {
+                        "path": "/potato/-14966",
+                        "data": "/potato/-14966"
+                    },
+                    {
+                        "path": "/potato/32733",
+                        "data": "/potato/32733"
+                    },
+                    {
+                        "path": "/potato/-127",
+                        "data": "/potato/-127"
+                    },
+                    {
+                        "path": "/potato/10291",
+                        "data": "/potato/10291"
+                    },
+                    {
+                        "path": "/potato/1521715208",
+                        "data": "/potato/1521715208"
+                    },
+                    {
+                        "path": "/potato/2",
+                        "data": "/potato/2"
+                    },
+                    {
+                        "path": "/potato/-550274968399630269",
+                        "data": "/potato/-550274968399630269"
+                    },
+                    {
+                        "path": "/potato/-1401742032",
+                        "data": "/potato/-1401742032"
+                    },
+                    {
+                        "path": "/potato/-31119",
+                        "data": "/potato/-31119"
+                    },
+                    {
+                        "path": "/potato/4037",
+                        "data": "/potato/4037"
+                    },
+                    {
+                        "path": "/potato/1988107888",
+                        "data": "/potato/1988107888"
+                    },
+                    {
+                        "path": "/potato/-1382976116",
+                        "data": "/potato/-1382976116"
+                    },
+                    {
+                        "path": "/potato/-6126333795068584319",
+                        "data": "/potato/-6126333795068584319"
+                    },
+                    {
+                        "path": "/potato/21473",
+                        "data": "/potato/21473"
+                    },
+                    {
+                        "path": "/potato/19098",
+                        "data": "/potato/19098"
+                    },
+                    {
+                        "path": "/potato/-74",
+                        "data": "/potato/-74"
+                    },
+                    {
+                        "path": "/potato/3847",
+                        "data": "/potato/3847"
+                    },
+                    {
+                        "path": "/potato/-14653",
+                        "data": "/potato/-14653"
+                    },
+                    {
+                        "path": "/potato/-139496268712683202117320669755484909178",
+                        "data": "/potato/-139496268712683202117320669755484909178"
+                    },
+                    {
+                        "path": "/potato/-32237",
+                        "data": "/potato/-32237"
+                    },
+                    {
+                        "path": "/potato/-141812155185430790762984142978365959797",
+                        "data": "/potato/-141812155185430790762984142978365959797"
+                    },
+                    {
+                        "path": "/potato/-108",
+                        "data": "/potato/-108"
+                    },
+                    {
+                        "path": "/potato/11241",
+                        "data": "/potato/11241"
+                    },
+                    {
+                        "path": "/potato/-16073",
+                        "data": "/potato/-16073"
+                    },
+                    {
+                        "path": "/potato/74",
+                        "data": "/potato/74"
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Potato"
+                ],
+                "summary": "Update One",
+                "operationId": "route_potato__item_id__put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Item Id",
+                            "type": "integer"
+                        },
+                        "name": "item_id",
+                        "in": "path"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PotatoUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Potato"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/79",
+                        "data": "/potato/79"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/14313",
+                        "data": "/potato/14313"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/-21",
+                        "data": "/potato/-21"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/-1898213856",
+                        "data": "/potato/-1898213856"
+                    },
+                    {
+                        "path": "/potato/1774720911",
+                        "data": "/potato/1774720911"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/-13168",
+                        "data": "/potato/-13168"
+                    },
+                    {
+                        "path": "/potato/51",
+                        "data": "/potato/51"
+                    },
+                    {
+                        "path": "/potato/-1075105093",
+                        "data": "/potato/-1075105093"
+                    },
+                    {
+                        "path": "/potato/-17",
+                        "data": "/potato/-17"
+                    },
+                    {
+                        "path": "/potato/-1",
+                        "data": "/potato/-1"
+                    },
+                    {
+                        "path": "/potato/-7335",
+                        "data": "/potato/-7335"
+                    },
+                    {
+                        "path": "/potato/-28",
+                        "data": "/potato/-28"
+                    },
+                    {
+                        "path": "/potato/-14325",
+                        "data": "/potato/-14325"
+                    },
+                    {
+                        "path": "/potato/-55",
+                        "data": "/potato/-55"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/27193",
+                        "data": "/potato/27193"
+                    },
+                    {
+                        "path": "/potato/-18012",
+                        "data": "/potato/-18012"
+                    },
+                    {
+                        "path": "/potato/2101314845",
+                        "data": "/potato/2101314845"
+                    },
+                    {
+                        "path": "/potato/25680",
+                        "data": "/potato/25680"
+                    },
+                    {
+                        "path": "/potato/100",
+                        "data": "/potato/100"
+                    },
+                    {
+                        "path": "/potato/-27",
+                        "data": "/potato/-27"
+                    },
+                    {
+                        "path": "/potato/-91",
+                        "data": "/potato/-91"
+                    },
+                    {
+                        "path": "/potato/10130",
+                        "data": "/potato/10130"
+                    },
+                    {
+                        "path": "/potato/-39",
+                        "data": "/potato/-39"
+                    },
+                    {
+                        "path": "/potato/-7101",
+                        "data": "/potato/-7101"
+                    },
+                    {
+                        "path": "/potato/30426",
+                        "data": "/potato/30426"
+                    },
+                    {
+                        "path": "/potato/52780046021035330667279927295021098989",
+                        "data": "/potato/52780046021035330667279927295021098989"
+                    },
+                    {
+                        "path": "/potato/11979",
+                        "data": "/potato/11979"
+                    },
+                    {
+                        "path": "/potato/-46",
+                        "data": "/potato/-46"
+                    },
+                    {
+                        "path": "/potato/12689",
+                        "data": "/potato/12689"
+                    },
+                    {
+                        "path": "/potato/2444182709651320796262257127813869392",
+                        "data": "/potato/2444182709651320796262257127813869392"
+                    },
+                    {
+                        "path": "/potato/-63",
+                        "data": "/potato/-63"
+                    },
+                    {
+                        "path": "/potato/30",
+                        "data": "/potato/30"
+                    },
+                    {
+                        "path": "/potato/-48",
+                        "data": "/potato/-48"
+                    },
+                    {
+                        "path": "/potato/2916",
+                        "data": "/potato/2916"
+                    },
+                    {
+                        "path": "/potato/11",
+                        "data": "/potato/11"
+                    },
+                    {
+                        "path": "/potato/-117",
+                        "data": "/potato/-117"
+                    },
+                    {
+                        "path": "/potato/3498",
+                        "data": "/potato/3498"
+                    },
+                    {
+                        "path": "/potato/-13",
+                        "data": "/potato/-13"
+                    },
+                    {
+                        "path": "/potato/-61",
+                        "data": "/potato/-61"
+                    },
+                    {
+                        "path": "/potato/90",
+                        "data": "/potato/90"
+                    },
+                    {
+                        "path": "/potato/8122",
+                        "data": "/potato/8122"
+                    },
+                    {
+                        "path": "/potato/-31",
+                        "data": "/potato/-31"
+                    },
+                    {
+                        "path": "/potato/3062",
+                        "data": "/potato/3062"
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Potato"
+                ],
+                "summary": "Delete One",
+                "operationId": "route_potato__item_id__delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Item Id",
+                            "type": "integer"
+                        },
+                        "name": "item_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Potato"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/1500891153",
+                        "data": "/potato/1500891153"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/-10775",
+                        "data": "/potato/-10775"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/-6384",
+                        "data": "/potato/-6384"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/28757",
+                        "data": "/potato/28757"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/33",
+                        "data": "/potato/33"
+                    },
+                    {
+                        "path": "/potato/-38",
+                        "data": "/potato/-38"
+                    },
+                    {
+                        "path": "/potato/2863",
+                        "data": "/potato/2863"
+                    },
+                    {
+                        "path": "/potato/11",
+                        "data": "/potato/11"
+                    },
+                    {
+                        "path": "/potato/0",
+                        "data": "/potato/0"
+                    },
+                    {
+                        "path": "/potato/-21612",
+                        "data": "/potato/-21612"
+                    },
+                    {
+                        "path": "/potato/25089",
+                        "data": "/potato/25089"
+                    },
+                    {
+                        "path": "/potato/98",
+                        "data": "/potato/98"
+                    },
+                    {
+                        "path": "/potato/-9122253900486107210",
+                        "data": "/potato/-9122253900486107210"
+                    },
+                    {
+                        "path": "/potato/71662601317737824",
+                        "data": "/potato/71662601317737824"
+                    },
+                    {
+                        "path": "/potato/-88",
+                        "data": "/potato/-88"
+                    },
+                    {
+                        "path": "/potato/-1315552432",
+                        "data": "/potato/-1315552432"
+                    },
+                    {
+                        "path": "/potato/27170",
+                        "data": "/potato/27170"
+                    },
+                    {
+                        "path": "/potato/-1446060785",
+                        "data": "/potato/-1446060785"
+                    },
+                    {
+                        "path": "/potato/-28407",
+                        "data": "/potato/-28407"
+                    },
+                    {
+                        "path": "/potato/-110",
+                        "data": "/potato/-110"
+                    },
+                    {
+                        "path": "/potato/-21",
+                        "data": "/potato/-21"
+                    },
+                    {
+                        "path": "/potato/1504206702",
+                        "data": "/potato/1504206702"
+                    },
+                    {
+                        "path": "/potato/81",
+                        "data": "/potato/81"
+                    },
+                    {
+                        "path": "/potato/-21143",
+                        "data": "/potato/-21143"
+                    },
+                    {
+                        "path": "/potato/-57459773400122387112346186266627024513",
+                        "data": "/potato/-57459773400122387112346186266627024513"
+                    },
+                    {
+                        "path": "/potato/21627",
+                        "data": "/potato/21627"
+                    },
+                    {
+                        "path": "/potato/84",
+                        "data": "/potato/84"
+                    },
+                    {
+                        "path": "/potato/-4064171438940709792",
+                        "data": "/potato/-4064171438940709792"
+                    },
+                    {
+                        "path": "/potato/16870",
+                        "data": "/potato/16870"
+                    },
+                    {
+                        "path": "/potato/-65",
+                        "data": "/potato/-65"
+                    },
+                    {
+                        "path": "/potato/21366",
+                        "data": "/potato/21366"
+                    },
+                    {
+                        "path": "/potato/-8322",
+                        "data": "/potato/-8322"
+                    },
+                    {
+                        "path": "/potato/-53384660369845641978003286230683792415",
+                        "data": "/potato/-53384660369845641978003286230683792415"
+                    },
+                    {
+                        "path": "/potato/-52",
+                        "data": "/potato/-52"
+                    },
+                    {
+                        "path": "/potato/-16074",
+                        "data": "/potato/-16074"
+                    },
+                    {
+                        "path": "/potato/-4963755627657969934",
+                        "data": "/potato/-4963755627657969934"
+                    },
+                    {
+                        "path": "/potato/83",
+                        "data": "/potato/83"
+                    },
+                    {
+                        "path": "/potato/-12014",
+                        "data": "/potato/-12014"
+                    },
+                    {
+                        "path": "/potato/-15918",
+                        "data": "/potato/-15918"
+                    },
+                    {
+                        "path": "/potato/-13737",
+                        "data": "/potato/-13737"
+                    },
+                    {
+                        "path": "/potato/-53",
+                        "data": "/potato/-53"
+                    },
+                    {
+                        "path": "/potato/-90",
+                        "data": "/potato/-90"
+                    },
+                    {
+                        "path": "/potato/-4596044196559828576",
+                        "data": "/potato/-4596044196559828576"
+                    }
+                ]
+            }
+        },
+        "/carrot": {
+            "get": {
+                "tags": [
+                    "Carrot"
+                ],
+                "summary": "Get All",
+                "operationId": "route_carrot_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Route Carrot Get",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Carrot"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/carrot",
+                        "data": "/carrot"
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Carrot"
+                ],
+                "summary": "Create One",
+                "operationId": "route_carrot_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Carrot"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carrot"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/carrot",
+                        "data": "/carrot"
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Carrot"
+                ],
+                "summary": "Delete All",
+                "operationId": "route_carrot_delete",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "title": "Response Route Carrot Delete",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Carrot"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/carrot",
+                        "data": "/carrot"
+                    }
+                ]
+            }
+        },
+        "/carrot/{item_id}": {
+            "get": {
+                "tags": [
+                    "Carrot"
+                ],
+                "summary": "Get One",
+                "operationId": "route_carrot__item_id__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Item Id",
+                            "type": "integer"
+                        },
+                        "name": "item_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carrot"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/27529",
+                        "data": "/carrot/27529"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/-23127",
+                        "data": "/carrot/-23127"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/-24691",
+                        "data": "/carrot/-24691"
+                    },
+                    {
+                        "path": "/carrot/96",
+                        "data": "/carrot/96"
+                    },
+                    {
+                        "path": "/carrot/6",
+                        "data": "/carrot/6"
+                    },
+                    {
+                        "path": "/carrot/13215",
+                        "data": "/carrot/13215"
+                    },
+                    {
+                        "path": "/carrot/-51",
+                        "data": "/carrot/-51"
+                    },
+                    {
+                        "path": "/carrot/79",
+                        "data": "/carrot/79"
+                    },
+                    {
+                        "path": "/carrot/4840439613509560241",
+                        "data": "/carrot/4840439613509560241"
+                    },
+                    {
+                        "path": "/carrot/92341391040073718299090312110460248061",
+                        "data": "/carrot/92341391040073718299090312110460248061"
+                    },
+                    {
+                        "path": "/carrot/-17983",
+                        "data": "/carrot/-17983"
+                    },
+                    {
+                        "path": "/carrot/70",
+                        "data": "/carrot/70"
+                    },
+                    {
+                        "path": "/carrot/49",
+                        "data": "/carrot/49"
+                    },
+                    {
+                        "path": "/carrot/9574",
+                        "data": "/carrot/9574"
+                    },
+                    {
+                        "path": "/carrot/2606",
+                        "data": "/carrot/2606"
+                    },
+                    {
+                        "path": "/carrot/-13758",
+                        "data": "/carrot/-13758"
+                    },
+                    {
+                        "path": "/carrot/-58",
+                        "data": "/carrot/-58"
+                    },
+                    {
+                        "path": "/carrot/-8211",
+                        "data": "/carrot/-8211"
+                    },
+                    {
+                        "path": "/carrot/-5471714024946179650",
+                        "data": "/carrot/-5471714024946179650"
+                    },
+                    {
+                        "path": "/carrot/-2473",
+                        "data": "/carrot/-2473"
+                    },
+                    {
+                        "path": "/carrot/-9",
+                        "data": "/carrot/-9"
+                    },
+                    {
+                        "path": "/carrot/-8421",
+                        "data": "/carrot/-8421"
+                    },
+                    {
+                        "path": "/carrot/-17566",
+                        "data": "/carrot/-17566"
+                    },
+                    {
+                        "path": "/carrot/9",
+                        "data": "/carrot/9"
+                    },
+                    {
+                        "path": "/carrot/1205911635",
+                        "data": "/carrot/1205911635"
+                    },
+                    {
+                        "path": "/carrot/13099200",
+                        "data": "/carrot/13099200"
+                    },
+                    {
+                        "path": "/carrot/26683",
+                        "data": "/carrot/26683"
+                    },
+                    {
+                        "path": "/carrot/104",
+                        "data": "/carrot/104"
+                    },
+                    {
+                        "path": "/carrot/-20367",
+                        "data": "/carrot/-20367"
+                    },
+                    {
+                        "path": "/carrot/-79",
+                        "data": "/carrot/-79"
+                    },
+                    {
+                        "path": "/carrot/49",
+                        "data": "/carrot/49"
+                    },
+                    {
+                        "path": "/carrot/-88",
+                        "data": "/carrot/-88"
+                    },
+                    {
+                        "path": "/carrot/-27508",
+                        "data": "/carrot/-27508"
+                    },
+                    {
+                        "path": "/carrot/107",
+                        "data": "/carrot/107"
+                    },
+                    {
+                        "path": "/carrot/1978683523",
+                        "data": "/carrot/1978683523"
+                    },
+                    {
+                        "path": "/carrot/-8619",
+                        "data": "/carrot/-8619"
+                    },
+                    {
+                        "path": "/carrot/-33",
+                        "data": "/carrot/-33"
+                    },
+                    {
+                        "path": "/carrot/-7091",
+                        "data": "/carrot/-7091"
+                    },
+                    {
+                        "path": "/carrot/-123",
+                        "data": "/carrot/-123"
+                    },
+                    {
+                        "path": "/carrot/169990701301688582105546784448256685629",
+                        "data": "/carrot/169990701301688582105546784448256685629"
+                    },
+                    {
+                        "path": "/carrot/-24563",
+                        "data": "/carrot/-24563"
+                    },
+                    {
+                        "path": "/carrot/7469",
+                        "data": "/carrot/7469"
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Carrot"
+                ],
+                "summary": "Update One",
+                "operationId": "route_carrot__item_id__put",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Item Id",
+                            "type": "integer"
+                        },
+                        "name": "item_id",
+                        "in": "path"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CarrotUpdate"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carrot"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/-32602",
+                        "data": "/carrot/-32602"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/23166",
+                        "data": "/carrot/23166"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/-119",
+                        "data": "/carrot/-119"
+                    },
+                    {
+                        "path": "/carrot/-9833",
+                        "data": "/carrot/-9833"
+                    },
+                    {
+                        "path": "/carrot/66",
+                        "data": "/carrot/66"
+                    },
+                    {
+                        "path": "/carrot/66",
+                        "data": "/carrot/66"
+                    },
+                    {
+                        "path": "/carrot/22804",
+                        "data": "/carrot/22804"
+                    },
+                    {
+                        "path": "/carrot/31047",
+                        "data": "/carrot/31047"
+                    },
+                    {
+                        "path": "/carrot/27931",
+                        "data": "/carrot/27931"
+                    },
+                    {
+                        "path": "/carrot/109",
+                        "data": "/carrot/109"
+                    },
+                    {
+                        "path": "/carrot/-4046",
+                        "data": "/carrot/-4046"
+                    },
+                    {
+                        "path": "/carrot/4452504033086995107",
+                        "data": "/carrot/4452504033086995107"
+                    },
+                    {
+                        "path": "/carrot/-17955",
+                        "data": "/carrot/-17955"
+                    },
+                    {
+                        "path": "/carrot/70",
+                        "data": "/carrot/70"
+                    },
+                    {
+                        "path": "/carrot/-21386",
+                        "data": "/carrot/-21386"
+                    },
+                    {
+                        "path": "/carrot/-83",
+                        "data": "/carrot/-83"
+                    },
+                    {
+                        "path": "/carrot/7739",
+                        "data": "/carrot/7739"
+                    },
+                    {
+                        "path": "/carrot/30",
+                        "data": "/carrot/30"
+                    },
+                    {
+                        "path": "/carrot/20867",
+                        "data": "/carrot/20867"
+                    },
+                    {
+                        "path": "/carrot/32547",
+                        "data": "/carrot/32547"
+                    },
+                    {
+                        "path": "/carrot/-31928",
+                        "data": "/carrot/-31928"
+                    },
+                    {
+                        "path": "/carrot/-124",
+                        "data": "/carrot/-124"
+                    },
+                    {
+                        "path": "/carrot/57",
+                        "data": "/carrot/57"
+                    },
+                    {
+                        "path": "/carrot/-61",
+                        "data": "/carrot/-61"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/-20527",
+                        "data": "/carrot/-20527"
+                    },
+                    {
+                        "path": "/carrot/60",
+                        "data": "/carrot/60"
+                    },
+                    {
+                        "path": "/carrot/-4413630366531654227099152616530545244",
+                        "data": "/carrot/-4413630366531654227099152616530545244"
+                    },
+                    {
+                        "path": "/carrot/13010",
+                        "data": "/carrot/13010"
+                    },
+                    {
+                        "path": "/carrot/-50",
+                        "data": "/carrot/-50"
+                    },
+                    {
+                        "path": "/carrot/-30075",
+                        "data": "/carrot/-30075"
+                    },
+                    {
+                        "path": "/carrot/6208",
+                        "data": "/carrot/6208"
+                    },
+                    {
+                        "path": "/carrot/259517500",
+                        "data": "/carrot/259517500"
+                    },
+                    {
+                        "path": "/carrot/-15449",
+                        "data": "/carrot/-15449"
+                    },
+                    {
+                        "path": "/carrot/1790527494",
+                        "data": "/carrot/1790527494"
+                    },
+                    {
+                        "path": "/carrot/-2497",
+                        "data": "/carrot/-2497"
+                    },
+                    {
+                        "path": "/carrot/-61",
+                        "data": "/carrot/-61"
+                    },
+                    {
+                        "path": "/carrot/-7721248436368977240",
+                        "data": "/carrot/-7721248436368977240"
+                    },
+                    {
+                        "path": "/carrot/-1648840744",
+                        "data": "/carrot/-1648840744"
+                    },
+                    {
+                        "path": "/carrot/14956",
+                        "data": "/carrot/14956"
+                    },
+                    {
+                        "path": "/carrot/58",
+                        "data": "/carrot/58"
+                    },
+                    {
+                        "path": "/carrot/10",
+                        "data": "/carrot/10"
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Carrot"
+                ],
+                "summary": "Delete One",
+                "operationId": "route_carrot__item_id__delete",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Item Id",
+                            "type": "integer"
+                        },
+                        "name": "item_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Carrot"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-tests": [
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/32720",
+                        "data": "/carrot/32720"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/-12721",
+                        "data": "/carrot/-12721"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/28576",
+                        "data": "/carrot/28576"
+                    },
+                    {
+                        "path": "/carrot/24749",
+                        "data": "/carrot/24749"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/0",
+                        "data": "/carrot/0"
+                    },
+                    {
+                        "path": "/carrot/-116",
+                        "data": "/carrot/-116"
+                    },
+                    {
+                        "path": "/carrot/9268",
+                        "data": "/carrot/9268"
+                    },
+                    {
+                        "path": "/carrot/-15544",
+                        "data": "/carrot/-15544"
+                    },
+                    {
+                        "path": "/carrot/-60",
+                        "data": "/carrot/-60"
+                    },
+                    {
+                        "path": "/carrot/-1717",
+                        "data": "/carrot/-1717"
+                    },
+                    {
+                        "path": "/carrot/-6",
+                        "data": "/carrot/-6"
+                    },
+                    {
+                        "path": "/carrot/-2791515884919739267",
+                        "data": "/carrot/-2791515884919739267"
+                    },
+                    {
+                        "path": "/carrot/34",
+                        "data": "/carrot/34"
+                    },
+                    {
+                        "path": "/carrot/-63",
+                        "data": "/carrot/-63"
+                    },
+                    {
+                        "path": "/carrot/7224",
+                        "data": "/carrot/7224"
+                    },
+                    {
+                        "path": "/carrot/28",
+                        "data": "/carrot/28"
+                    },
+                    {
+                        "path": "/carrot/-7841",
+                        "data": "/carrot/-7841"
+                    },
+                    {
+                        "path": "/carrot/-30",
+                        "data": "/carrot/-30"
+                    },
+                    {
+                        "path": "/carrot/-31655",
+                        "data": "/carrot/-31655"
+                    },
+                    {
+                        "path": "/carrot/-123",
+                        "data": "/carrot/-123"
+                    },
+                    {
+                        "path": "/carrot/35780170774295919410627426671179946167",
+                        "data": "/carrot/35780170774295919410627426671179946167"
+                    },
+                    {
+                        "path": "/carrot/-169823670",
+                        "data": "/carrot/-169823670"
+                    },
+                    {
+                        "path": "/carrot/-24095",
+                        "data": "/carrot/-24095"
+                    },
+                    {
+                        "path": "/carrot/94",
+                        "data": "/carrot/94"
+                    },
+                    {
+                        "path": "/carrot/-21365",
+                        "data": "/carrot/-21365"
+                    },
+                    {
+                        "path": "/carrot/14963",
+                        "data": "/carrot/14963"
+                    },
+                    {
+                        "path": "/carrot/1567734072",
+                        "data": "/carrot/1567734072"
+                    },
+                    {
+                        "path": "/carrot/17066",
+                        "data": "/carrot/17066"
+                    },
+                    {
+                        "path": "/carrot/2124",
+                        "data": "/carrot/2124"
+                    },
+                    {
+                        "path": "/carrot/8",
+                        "data": "/carrot/8"
+                    },
+                    {
+                        "path": "/carrot/-85",
+                        "data": "/carrot/-85"
+                    },
+                    {
+                        "path": "/carrot/10257",
+                        "data": "/carrot/10257"
+                    },
+                    {
+                        "path": "/carrot/40",
+                        "data": "/carrot/40"
+                    },
+                    {
+                        "path": "/carrot/621253720",
+                        "data": "/carrot/621253720"
+                    },
+                    {
+                        "path": "/carrot/86",
+                        "data": "/carrot/86"
+                    },
+                    {
+                        "path": "/carrot/45",
+                        "data": "/carrot/45"
+                    },
+                    {
+                        "path": "/carrot/70",
+                        "data": "/carrot/70"
+                    },
+                    {
+                        "path": "/carrot/17100",
+                        "data": "/carrot/17100"
+                    },
+                    {
+                        "path": "/carrot/-10",
+                        "data": "/carrot/-10"
+                    },
+                    {
+                        "path": "/carrot/85",
+                        "data": "/carrot/85"
+                    },
+                    {
+                        "path": "/carrot/690610084",
+                        "data": "/carrot/690610084"
+                    },
+                    {
+                        "path": "/carrot/-9730",
+                        "data": "/carrot/-9730"
+                    },
+                    {
+                        "path": "/carrot/54",
+                        "data": "/carrot/54"
+                    },
+                    {
+                        "path": "/carrot/-4514",
+                        "data": "/carrot/-4514"
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Carrot": {
+                "title": "Carrot",
+                "required": [
+                    "length"
+                ],
+                "type": "object",
+                "properties": {
+                    "length": {
+                        "title": "Length",
+                        "type": "number"
+                    },
+                    "color": {
+                        "title": "Color",
+                        "type": "string",
+                        "default": "Orange"
+                    }
+                }
+            },
+            "CarrotUpdate": {
+                "title": "CarrotUpdate",
+                "required": [
+                    "length",
+                    "color"
+                ],
+                "type": "object",
+                "properties": {
+                    "length": {
+                        "title": "Length",
+                        "type": "number"
+                    },
+                    "color": {
+                        "title": "Color",
+                        "type": "string"
+                    }
+                }
+            },
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "Potato": {
+                "title": "Potato",
+                "required": [
+                    "thickness",
+                    "mass",
+                    "color",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "thickness": {
+                        "title": "Thickness",
+                        "type": "number"
+                    },
+                    "mass": {
+                        "title": "Mass",
+                        "type": "number"
+                    },
+                    "color": {
+                        "title": "Color",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Type",
+                        "type": "string"
+                    }
+                }
+            },
+            "PotatoUpdate": {
+                "title": "PotatoUpdate",
+                "required": [
+                    "thickness",
+                    "mass",
+                    "color",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "thickness": {
+                        "title": "Thickness",
+                        "type": "number"
+                    },
+                    "mass": {
+                        "title": "Mass",
+                        "type": "number"
+                    },
+                    "color": {
+                        "title": "Color",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Type",
+                        "type": "string"
+                    }
+                }
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
