@@ -69,11 +69,16 @@ class OpenAPIPerf:
                 self.schema['paths'][path_name][req_type]['x-tests'] = []
                 
                 path_tokens = []
+                query_tokens = []
                 self.resolved_tests = []
                 if 'parameters' in req_data:
                     for parameter in req_data['parameters']:
-                        if parameter['in'] == 'path': # TODO: when is this false?
-                            path_tokens.append((parameter['name'], parameter['schema']['type']))
+                        token = (parameter['name'], parameter['schema']['type'])
+                        if parameter['in'] == 'path':
+                            path_tokens.append(token)
+                        elif parameter['in'] == 'query':
+                            query_tokens.append(token)
+                        # TODO: any more of these?
 
                 component_schema = {}
                 if 'requestBody' in req_data:
@@ -81,19 +86,35 @@ class OpenAPIPerf:
                     component_schema = self.schema['components']['schemas'][component_schema_name]['properties']
 
                 resolve_test_with_strategies = given(st.data())(self.resolve_test)
-                resolve_test_with_strategies(self, path_name, path_tokens, component_schema)
+                resolve_test_with_strategies(self, path_name, path_tokens, query_tokens, component_schema)
 
                 # Save test to schema
                 self.schema['paths'][path_name][req_type]['x-tests'] = self.resolved_tests
 
-    # Replace tokens in path with generated values
+    # Replace tokens with generated values
     @staticmethod # needed for hypothesis @given to function properly
     @settings(max_examples=100)
-    def resolve_test(self, path_name: str, tokens: [(str, str)], component_schema: {}, data):
-        for token_name, token_type in tokens:
+    def resolve_test(
+        self,
+        path_name: str,
+        path_tokens: [(str, str)],
+        query_tokens: [(str, str)],
+        component_schema: {},
+        data):
+
+        # Path tokens
+        for token_name, token_type in path_tokens:
             replacement = data.draw(PARAM_TYPE_MAPPING[token_type], label = token_name)
             path_name = path_name.replace("{" + token_name + "}", str(replacement))
 
+        # Query tokens
+        separator = '?'
+        for token_name, token_type in query_tokens:
+            token_value = data.draw(PARAM_TYPE_MAPPING[token_type], label = token_name)
+            path_name = path_name + separator + token_name + '=' + str(token_value)
+            separator = '&'
+
+        # Component data
         test_data = {}
         for component_name, component_data in component_schema.items():
             test_data[component_name] = data.draw(PARAM_TYPE_MAPPING[component_data['type']], label = component_name)
