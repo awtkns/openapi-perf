@@ -12,14 +12,16 @@ REQ_TYPE_MAPPING = {
     "delete": requests.delete
 }
 PARAM_TYPE_MAPPING = {
-    "integer": st.integers()
+    "integer": st.integers(),
+    "number": st.floats(),
+    "string": st.text()
 }
 
 class OpenAPIPerf:
     endpoint_url: str
     schema = {}
 
-    resolved_paths = []
+    resolved_tests = []
 
     def __init__(self, endpoint_url: str, schema_path: str, results_dir: str = None):
         if not endpoint_url.startswith('http'):
@@ -67,30 +69,36 @@ class OpenAPIPerf:
                 self.schema['paths'][path_name][req_type]['x-tests'] = []
                 
                 path_tokens = []
-                self.resolved_paths = []
+                self.resolved_tests = []
                 if 'parameters' in req_data:
                     for parameter in req_data['parameters']:
-                        if parameter['in'] == 'path':
+                        if parameter['in'] == 'path': # TODO: when is this false?
                             path_tokens.append((parameter['name'], parameter['schema']['type']))
-                            
-                        # TODO: support parameters which are not part of path
 
-                resolve_path_with_strategies = given(st.data())(self.resolve_path)
-                resolve_path_with_strategies(self, path_name, path_tokens)
+                component_schema = {}
+                if 'requestBody' in req_data:
+                    component_schema_name = req_data['requestBody']['content']['application/json']['schema']['$ref'].split('/')[-1]
+                    component_schema = self.schema['components']['schemas'][component_schema_name]['properties']
+
+                resolve_test_with_strategies = given(st.data())(self.resolve_test)
+                resolve_test_with_strategies(self, path_name, path_tokens, component_schema)
 
                 # Save test to schema
-                x_tests = list(map(lambda path, data: {"path": path, "data": data}, self.resolved_paths, self.resolved_paths))
-                self.schema['paths'][path_name][req_type]['x-tests'] = x_tests
+                self.schema['paths'][path_name][req_type]['x-tests'] = self.resolved_tests
 
     # Replace tokens in path with generated values
     @staticmethod # needed for hypothesis @given to function properly
-    @settings(max_examples=50)
-    def resolve_path(self, path_name: str, tokens: [(str, str)], data):
+    @settings(max_examples=100)
+    def resolve_test(self, path_name: str, tokens: [(str, str)], component_schema: {}, data):
         for token_name, token_type in tokens:
             replacement = data.draw(PARAM_TYPE_MAPPING[token_type], label = token_name)
             path_name = path_name.replace("{" + token_name + "}", str(replacement))
 
-        self.resolved_paths.append(path_name)
+        test_data = {}
+        for component_name, component_data in component_schema.items():
+            test_data[component_name] = data.draw(PARAM_TYPE_MAPPING[component_data['type']], label = component_name)
+
+        self.resolved_tests.append({'path': path_name, 'data': test_data})
 
     # Run tests and return results
     def run(self):
@@ -107,10 +115,9 @@ class OpenAPIPerf:
                     response = execute(urljoin(self.endpoint_url, test['path']))
                     toc = time.perf_counter()
 
-                    print(req_data['responses'])
-
                     response_data.append({
                         'path':     test['path'],
+                        'data':     test['data'],
                         'response': response,
                         'validity': str(response.status_code) in req_data['responses'],
                         'time':     toc - tic
