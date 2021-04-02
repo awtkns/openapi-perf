@@ -13,6 +13,7 @@ REQ_TYPE_MAPPING = {
     "delete": requests.delete,
 }
 
+
 class OpenAPIPerf:
     api_schema = {}
     test_schema = {"endpoint_url": "", "tests": []}
@@ -22,7 +23,8 @@ class OpenAPIPerf:
         test_schema_path: str = None,
         endpoint_url: str = None,
         api_schema_path: str = None,
-        results_dir: str = None):
+        results_dir: str = None,
+    ):
 
         if test_schema_path:
             if not path.exists(test_schema_path):
@@ -62,7 +64,6 @@ class OpenAPIPerf:
             raise Exception("No schema was found")
 
         return api_schema
-
 
     # Run tests and return results
     def run(self):
