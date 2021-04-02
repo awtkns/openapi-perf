@@ -4,11 +4,11 @@ import requests
 import pandas as pd
 
 ENDPOINT_URL = 'http://localhost:5000'
-SCHEMA_PATH = '/openapi.json'
+API_SCHEMA_PATH = '/openapi.json'
 
 
 def test_schema_endpoint_exists():
-    res = requests.get(ENDPOINT_URL + SCHEMA_PATH)
+    res = requests.get(ENDPOINT_URL + API_SCHEMA_PATH)
 
     assert res.status_code == 200
     assert res.json()
@@ -20,7 +20,7 @@ def test_schema_endpoint_exists():
 def test_generation():
     op = OpenAPIPerf(
         endpoint_url = ENDPOINT_URL,
-        schema_path = SCHEMA_PATH,
+        api_schema_path = API_SCHEMA_PATH,
         results_dir = str(pathlib.Path(__file__).parent.absolute()) + "/sample_results"
     )
     results = op.run()
@@ -28,16 +28,12 @@ def test_generation():
     pd.set_option('display.max_columns', None)
     print(pd.DataFrame(results))
     
-
-    # op.tests = [t1, t2, t3]
-
-    # op.add_test(
-    #     endpoint='http://localhost'
-    #     method=''
-    #     data=,
-    #     expected_result,
-    #     expected_status_code
-    # ),
-
-    # op.run()
     
+# def test_importing():
+#     op = OpenAPIPerf(
+#         test_schema_path = str(pathlib.Path(__file__).parent.absolute()) + '/sample_results/test_schema.json'
+#     )
+#     results = op.run()
+
+#     pd.set_option('display.max_columns', None)
+#     print(pd.DataFrame(results))
