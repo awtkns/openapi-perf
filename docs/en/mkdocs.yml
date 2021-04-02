@@ -17,6 +17,7 @@ theme:
 nav:
   - Overview: index.md
   - CI/CD: ci.md
+  - Contributing: contributing.md
 
 markdown_extensions:
   - extra
