@@ -17,4 +17,4 @@ class Potato(BaseModel):
 
 class Carrot(BaseModel):
     length: float
-    color: str = 'Orange'
+    color: str = "Orange"

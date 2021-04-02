@@ -11,7 +11,9 @@ from sqlalchemy.orm import sessionmaker
 from ._schemas import Potato, Carrot
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -26,7 +28,7 @@ def session():
 
 
 class PotatoModel(Base):
-    __tablename__ = 'potatoes'
+    __tablename__ = "potatoes"
     id = Column(Integer, primary_key=True, index=True)
     thickness = Column(Float)
     mass = Column(Float)
@@ -35,7 +37,7 @@ class PotatoModel(Base):
 
 
 class CarrotModel(Base):
-    __tablename__ = 'carrots'
+    __tablename__ = "carrots"
     id = Column(Integer, primary_key=True, index=True)
     length = Column(Float)
     color = Column(String)
@@ -43,5 +45,9 @@ class CarrotModel(Base):
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
-app.include_router(SQLAlchemyCRUDRouter(schema=Potato, db_model=PotatoModel, db=session))
-app.include_router(SQLAlchemyCRUDRouter(schema=Carrot, db_model=CarrotModel, db=session))
+app.include_router(
+    SQLAlchemyCRUDRouter(schema=Potato, db_model=PotatoModel, db=session)
+)
+app.include_router(
+    SQLAlchemyCRUDRouter(schema=Carrot, db_model=CarrotModel, db=session)
+)

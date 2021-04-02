@@ -3,8 +3,8 @@ import pathlib
 import requests
 import pandas as pd
 
-ENDPOINT_URL = 'http://localhost:5000'
-API_SCHEMA_PATH = '/openapi.json'
+ENDPOINT_URL = "http://localhost:5000"
+API_SCHEMA_PATH = "/openapi.json"
 
 
 def test_schema_endpoint_exists():
@@ -14,21 +14,21 @@ def test_schema_endpoint_exists():
     assert res.json()
 
     print(res.json())
-    assert res.json()['paths']
+    assert res.json()["paths"]
 
 
 def test_generation():
     op = OpenAPIPerf(
-        endpoint_url = ENDPOINT_URL,
-        api_schema_path = API_SCHEMA_PATH,
-        results_dir = str(pathlib.Path(__file__).parent.absolute()) + "/sample_results"
+        endpoint_url=ENDPOINT_URL,
+        api_schema_path=API_SCHEMA_PATH,
+        results_dir=str(pathlib.Path(__file__).parent.absolute()) + "/sample_results",
     )
     results = op.run()
 
-    pd.set_option('display.max_columns', None)
+    pd.set_option("display.max_columns", None)
     print(pd.DataFrame(results))
-    
-    
+
+
 # def test_importing():
 #     op = OpenAPIPerf(
 #         test_schema_path = str(pathlib.Path(__file__).parent.absolute()) + '/sample_results/test_schema.json'

@@ -12,7 +12,7 @@ class Server(uvicorn.Server):
     def install_signal_handlers(self):
         pass
 
-    def __init__(self, app, host: str = '127.0.0.1', port: int = 5000):
+    def __init__(self, app, host: str = "127.0.0.1", port: int = 5000):
         config = uvicorn.Config(app, host, port)
         super().__init__(config=config)
 
