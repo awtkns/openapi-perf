@@ -1,4 +1,5 @@
 from hypothesis import given, settings, strategies as st
+from typing import Dict, List, Any
 
 PARAM_TYPE_MAPPING = {
     "integer": st.integers(),
@@ -9,7 +10,8 @@ PARAM_TYPE_MAPPING = {
 
 class Generator:
 
-    resolved_tests = []
+    def __init__(self) -> None:
+        self.resolved_tests: List[Dict[str, Any]] = []
 
     # Generate the list of property-based tests
     def generate_tests(self, api_schema: {}):

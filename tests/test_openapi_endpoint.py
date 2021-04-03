@@ -5,6 +5,7 @@ import pandas as pd
 
 ENDPOINT_URL = "http://localhost:5000"
 API_SCHEMA_PATH = "/openapi.json"
+RESULTS_DIR = str(pathlib.Path(__file__).parent.absolute()) + "/sample_results"
 
 
 def test_schema_endpoint_exists():
@@ -21,19 +22,8 @@ def test_generation():
     op = OpenAPIPerf(
         endpoint_url=ENDPOINT_URL,
         api_schema_path=API_SCHEMA_PATH,
-        results_dir=str(pathlib.Path(__file__).parent.absolute()) + "/sample_results",
+        results_dir=RESULTS_DIR,
     )
     results = op.run()
-
-    pd.set_option("display.max_columns", None)
-    print(pd.DataFrame(results))
-
-
-# def test_importing():
-#     op = OpenAPIPerf(
-#         test_schema_path = str(pathlib.Path(__file__).parent.absolute()) + '/sample_results/test_schema.json'
-#     )
-#     results = op.run()
-
-#     pd.set_option('display.max_columns', None)
-#     print(pd.DataFrame(results))
+    results = pd.DataFrame(results)
+    results.to_csv(RESULTS_DIR + "/results.csv")

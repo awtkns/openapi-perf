@@ -1,15 +1,20 @@
+from typing import Dict, Any, Callable, List
+
 from urllib.parse import urljoin
 import requests
 import time
 
-REQ_TYPE_MAPPING = {
+REQ_TYPE_MAPPING: Dict[str, Callable[[Any], Any]] = {
     "get": requests.get,
     "post": requests.post,
     "put": requests.put,
     "delete": requests.delete,
 }
 
-def execute(test_schema: {}, api_schema: {}):
+DICT = Dict[str, Any]
+
+
+def execute(test_schema: DICT, api_schema: DICT) -> List[DICT]:
     endpoint_url = test_schema["endpoint_url"]
     response_data = []
 
@@ -20,20 +25,20 @@ def execute(test_schema: {}, api_schema: {}):
                 "x-tests" in req_data
             ), f"Test data for {path_name} {req_type} not generated"
 
-            execute = REQ_TYPE_MAPPING[req_type]
+            request = REQ_TYPE_MAPPING[req_type]
             for test in req_data["x-tests"]:
-                tic = time.perf_counter()
-                response = execute(urljoin(endpoint_url, test["path"]))
-                toc = time.perf_counter()
+                response: requests.Response = request(urljoin(endpoint_url, test["path"]))
 
                 response_data.append(
                     {
+                        "method": response.request.method,
                         "path": test["path"],
                         "data": test["data"],
                         "response": response,
-                        "validity": str(response.status_code)
-                        in req_data["responses"],
-                        "time": toc - tic,
+                        "response_data": response.json(),
+                        "status_code": response.status_code,
+                        "validity": str(response.status_code) in req_data["responses"],
+                        "time": response.elapsed.total_seconds()
                     }
                 )
     
