@@ -81,15 +81,29 @@ class Generator:
 
                 total_generated_requests[req_type] = generated_requests
 
-            # TODO: add test logic
-            # get
-            # put
-            # get
-            # post
-            # get
-            # delete
-            # get
-            tests = list(zip(*total_generated_requests.values()))
+            # create default test plan: 
+            # get, put, get, post, get, delete, get
+            tests = []
+            get_exists = 'get' in total_generated_requests
+            if get_exists:
+                get = total_generated_requests['get']
+                if get_exists:
+                    tests.append(get) 
+            if 'put' in total_generated_requests:
+                tests.append(total_generated_requests['put'])
+                if get_exists:
+                    tests.append(get) 
+            if 'post' in total_generated_requests:
+                tests.append(total_generated_requests['post']) 
+                if get_exists:
+                    tests.append(get) 
+            if 'delete' in total_generated_requests:
+                tests.append(total_generated_requests['delete']) 
+                if get_exists:
+                    tests.append(get) 
+
+            # reshape test list
+            tests = list(zip(*tests))
 
             test_schema["paths"][path_name] = tests
 
@@ -106,7 +120,7 @@ class Generator:
     # Generate property-based data of a given type
     @staticmethod
     @settings(max_examples=NUM_TESTS)
-    def resolve_data(self, data_name: str, data_type: str, data):
+    def resolve_data(self, data_name: str, data_type: str, data: st.data):
         self.resolved_data_return.append(data.draw(PARAM_TYPE_MAPPING[data_type], label=data_name))
 
     # Add a parameter token to a request
