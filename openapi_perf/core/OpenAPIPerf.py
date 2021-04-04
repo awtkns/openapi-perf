@@ -13,25 +13,31 @@ class OpenAPIPerf:
 
     def __init__(
         self,
-        endpoint_url: str,
-        api_schema_path: str = '/openapi.json',
         test_schema_path: str = None,
+        endpoint_url: str = None,
+        api_schema_path: str = '/openapi.json',
         results_dir: str = None,
-        auto_generate: bool = True,  # Added to disable test generation for unit testing
+        auto_generate: bool = True,  # Added to disable test generation for unit testing   # I don't think we need this. If you don't want to generate tests, then provide some yourself with test_schema_path.
     ):
 
-        # TODO: Implement test schema loading
         if test_schema_path:
-            assert path.exists(test_schema_path), f"Test schema not found at {test_schema_path}"
+            if not path.exists(test_schema_path):
+                raise ValueError(f"Test schema not found at {test_schema_path}")
+            with open(test_schema_path) as f:
+                self.test_schema = json.load(f)
 
-        self.endpoint_url = self.sanitize_endpoint_url(endpoint_url)
-        self.api_schema = self.get_api_schema(self.endpoint_url, api_schema_path)
+        elif endpoint_url:
+            self.endpoint_url = self.sanitize_endpoint_url(endpoint_url)
+            self.api_schema = self.get_api_schema(self.endpoint_url, api_schema_path)
 
-        if auto_generate:
-            self._generate()
+            if auto_generate:
+                self._generate()
 
-            if results_dir:
-                self.write_results(results_dir)
+        else:
+            raise ValueError(f"No test schema or endpoint provided")
+
+        if results_dir:
+            self.write_results(results_dir)
 
     @staticmethod
     def sanitize_endpoint_url(endpoint_url):
@@ -73,9 +79,6 @@ class OpenAPIPerf:
     def write_results(self, results_dir: str):
         if not path.exists(results_dir):
             mkdir(results_dir)
-
-        with open(results_dir + "/api_schema.json", "w") as out:
-            json.dump(self.api_schema, out)
 
         with open(results_dir + "/test_schema.json", "w") as out:
             json.dump(self.test_schema, out)
