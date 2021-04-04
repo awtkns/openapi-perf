@@ -1,6 +1,8 @@
 from hypothesis import given, settings, strategies as st
 from typing import Dict, List, Any
 
+NUM_TESTS = 100
+
 PARAM_TYPE_MAPPING = {
     "integer": st.integers(),
     "number": st.floats(),
@@ -11,81 +13,114 @@ PARAM_TYPE_MAPPING = {
 class Generator:
 
     def __init__(self) -> None:
-        self.resolved_tests: List[Dict[str, Any]] = []
+        self.resolve_data_with_strategy = None
+        self.resolved_data_return: List[Dict[str, Any]] = []
 
-    # Generate the list of property-based tests
+    # Generate test schema of property-based tests
     def generate_tests(self, api_schema: {}):
-        for path_name, path_data in api_schema["paths"].items():
-            for req_type, req_data in path_data.items():
-                if "x-tests" in req_data:
-                    print(
-                        "tests already found, skipping"
-                    )  # TODO: put this in a logfile
-                    continue
-                api_schema["paths"][path_name][req_type]["x-tests"] = []
+        test_schema = {
+            "endpoint_url": "",
+            "paths": {},
+        }
 
-                path_tokens = []
-                query_tokens = []
-                self.resolved_tests = []
+        # parse paths
+        for path_name, path_data in api_schema["paths"].items():
+            tokens = {}
+            component_schemas = {}
+            total_generated_requests = {}
+
+            # reset data generation strategy
+            self.resolve_data_with_strategy = given(st.data())(self.resolve_data)
+
+            # parse request types
+            for req_type, req_data in path_data.items():
+                generated_requests = [{"type": req_type, "path": path_name, "data": {}} for _ in range(NUM_TESTS)] 
+
+                # parse request parameters
                 if "parameters" in req_data:
                     for parameter in req_data["parameters"]:
-                        token = (parameter["name"], parameter["schema"]["type"])
-                        if parameter["in"] == "path":
-                            path_tokens.append(token)
-                        elif parameter["in"] == "query":
-                            query_tokens.append(token)
-                        # TODO: any more of these?
 
-                component_schema = {}
+                        # resolve parameter to data
+                        parameter_id = parameter["in"] + '/' + parameter["name"]
+                        if not parameter_id in tokens:
+                            tokens[parameter_id] = self.resolve_data_and_return(
+                                parameter_id, parameter["schema"]["type"]
+                            )
+
+                        # add parameter to paths
+                        generated_requests = self.add_tokens(
+                            generated_requests, 
+                            tokens[parameter_id], 
+                            parameter['in'], 
+                            parameter["name"],
+                        )
+
+                # parse request components
                 if "requestBody" in req_data:
-                    component_schema_name = req_data["requestBody"]["content"][
-                        "application/json"
-                    ]["schema"]["$ref"].split("/")[-1]
-                    component_schema = api_schema["components"]["schemas"][
-                        component_schema_name
-                    ]["properties"]
+                    component_schema_name = req_data["requestBody"]["content"]["application/json"]["schema"]["$ref"].split("/")[-1]
+                    component_schema = api_schema["components"]["schemas"][component_schema_name]["properties"]
+                    # TODO: can a request have multiple components? Assuming no..
 
-                resolve_test_with_strategies = given(st.data())(self.resolve_test)
-                resolve_test_with_strategies(
-                    self, path_name, path_tokens, query_tokens, component_schema
-                )
+                    # resolve component
+                    if not component_schema_name in component_schemas:
+                        generated_component = {}
+                        for component_param_name, component_param_data in component_schema.items():
+                            generated_component[component_param_name] = self.resolve_data_and_return(
+                                "component/" + component_schema_name + component_param_name,
+                                component_param_data["type"]
+                            )
 
-                # Save test to schema
-                api_schema["paths"][path_name][req_type][
-                    "x-tests"
-                ] = self.resolved_tests
+                        component_schemas[component_schema_name] = generated_component
 
-        return api_schema
+                    generated_requests = self.add_tokens(
+                        generated_requests, 
+                        component_schemas[component_schema_name], 
+                        "component", 
+                        "",
+                    )
 
-    # Replace tokens with generated values
+                total_generated_requests[req_type] = generated_requests
+
+            # TODO: add test logic
+            # get
+            # put
+            # get
+            # post
+            # get
+            # delete
+            # get
+            tests = list(zip(*total_generated_requests.values()))
+
+            test_schema["paths"][path_name] = tests
+
+        return test_schema
+
+    # Wrapper for the static resolve_data function
+    # Necessary to enable Hypothesis to return generated values
+    def resolve_data_and_return(self, data_name: str, data_type: str):
+        self.resolved_data_return = []
+        self.resolve_data_with_strategy(self, data_name, data_type)
+        assert len(self.resolved_data_return) == NUM_TESTS, f"Hypothesis didn't generate {NUM_TESTS} values"
+        return self.resolved_data_return
+
+    # Generate property-based data of a given type
     @staticmethod
-    @settings(max_examples=100)
-    def resolve_test(
-        self,
-        path_name: str,
-        path_tokens: [(str, str)],
-        query_tokens: [(str, str)],
-        component_schema: {},
-        data,
-    ):
+    @settings(max_examples=NUM_TESTS)
+    def resolve_data(self, data_name: str, data_type: str, data):
+        self.resolved_data_return.append(data.draw(PARAM_TYPE_MAPPING[data_type], label=data_name))
 
-        # Path tokens
-        for token_name, token_type in path_tokens:
-            replacement = data.draw(PARAM_TYPE_MAPPING[token_type], label=token_name)
-            path_name = path_name.replace("{" + token_name + "}", str(replacement))
+    # Add a parameter token to a request
+    @staticmethod
+    def add_tokens(requests: [{}], token_values: [], token_type: str, token_name: str):
+        for i in range(len(requests)):
+            if token_type == "path":
+                requests[i]["path"] = requests[i]["path"].replace("{" + token_name + "}", str(token_values[i]))
+            elif token_type == "query":
+                separator = '&' if '?' in requests[i]["path"] else '?'
+                requests[i]["path"] = requests[i]["path"] + separator + token_name + "=" + str(token_values[i])
+            elif token_type == "component":
+                requests[i]["data"] = {param_name: param_data[i] for param_name, param_data in token_values.items()}
+            else:
+                raise Exception("Unexpected parameter token type")
 
-        # Query tokens
-        separator = "?"
-        for token_name, token_type in query_tokens:
-            token_value = data.draw(PARAM_TYPE_MAPPING[token_type], label=token_name)
-            path_name = path_name + separator + token_name + "=" + str(token_value)
-            separator = "&"
-
-        # Component data
-        test_data = {}
-        for component_name, component_data in component_schema.items():
-            test_data[component_name] = data.draw(
-                PARAM_TYPE_MAPPING[component_data["type"]], label=component_name
-            )
-
-        self.resolved_tests.append({"path": path_name, "data": test_data})
+        return requests

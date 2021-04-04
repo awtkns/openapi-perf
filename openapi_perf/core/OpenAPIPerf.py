@@ -9,7 +9,7 @@ from .Executor import execute
 
 class OpenAPIPerf:
     api_schema = {}
-    test_schema = {"endpoint_url": "", "tests": []}
+    test_schema = {}
 
     def __init__(
         self,
@@ -28,10 +28,10 @@ class OpenAPIPerf:
             if not endpoint_url.startswith("http"):
                 endpoint_url = "http://" + endpoint_url
 
-            self.test_schema["endpoint_url"] = endpoint_url
             self.api_schema = self.get_api_schema(endpoint_url, api_schema_path)
 
-            self.api_schema = Generator().generate_tests(self.api_schema)
+            self.test_schema = Generator().generate_tests(self.api_schema)
+            self.test_schema["endpoint_url"] = endpoint_url
 
         else:
             if api_schema_path:
