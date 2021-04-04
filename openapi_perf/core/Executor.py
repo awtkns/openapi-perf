@@ -22,8 +22,7 @@ def execute(test_schema: Dict[str, Any]) -> List[Dict[str, Any]]:
             for request in test:
                 make_request = REQ_TYPE_MAPPING[request["type"]]
                 response: requests.Response = make_request(
-                    urljoin(endpoint_url, request["path"]),
-                    data = request["data"]
+                    urljoin(endpoint_url, request["path"]), data=request["data"]
                 )
 
                 response_data.append(
@@ -38,5 +37,5 @@ def execute(test_schema: Dict[str, Any]) -> List[Dict[str, Any]]:
                         "time": response.elapsed.total_seconds(),
                     }
                 )
-    
+
     return response_data

@@ -8,6 +8,7 @@ app.include_router(MemoryCRUDRouter(schema=Potato))
 app.include_router(MemoryCRUDRouter(schema=Carrot))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app)
