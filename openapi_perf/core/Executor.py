@@ -11,34 +11,31 @@ REQ_TYPE_MAPPING: Dict[str, Callable[[Any], Any]] = {
     "delete": requests.delete,
 }
 
-DICT = Dict[str, Any]
 
-
-def execute(test_schema: DICT, api_schema: DICT) -> List[DICT]:
+def execute(test_schema: Dict[str, Any]) -> List[Dict[str, Any]]:
     endpoint_url = test_schema["endpoint_url"]
     response_data = []
 
     # TODO: multi-thread this
-    for path_name, path_data in api_schema["paths"].items():
-        for req_type, req_data in path_data.items():
-            assert (
-                "x-tests" in req_data
-            ), f"Test data for {path_name} {req_type} not generated"
-
-            request = REQ_TYPE_MAPPING[req_type]
-            for test in req_data["x-tests"]:
-                response: requests.Response = request(urljoin(endpoint_url, test["path"]))
+    for path_name, path_tests in test_schema["paths"].items():
+        for test in path_tests:
+            for request in test:
+                make_request = REQ_TYPE_MAPPING[request["type"]]
+                response: requests.Response = make_request(
+                    urljoin(endpoint_url, request["path"]),
+                    data = request["data"]
+                )
 
                 response_data.append(
                     {
-                        "method": response.request.method,
-                        "path": test["path"],
-                        "data": test["data"],
+                        "type": request["type"],
+                        "path": request["path"],
+                        "data": request["data"],
                         "response": response,
                         "response_data": response.json(),
                         "status_code": response.status_code,
-                        "validity": str(response.status_code) in req_data["responses"],
-                        "time": response.elapsed.total_seconds()
+                        #"validity": str(response.status_code) in request["expected"],
+                        "time": response.elapsed.total_seconds(),
                     }
                 )
     

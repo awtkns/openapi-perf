@@ -60,7 +60,7 @@ class OpenAPIPerf:
 
     # Run tests and return results
     def run(self):
-        response_data = execute(self.test_schema, self.api_schema)
+        response_data = execute(self.test_schema)
 
         #TODO: graph this data and put it in a report file
 
