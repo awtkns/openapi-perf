@@ -28,6 +28,7 @@ def execute(test_schema: Dict[str, Any]) -> List[Dict[str, Any]]:
                 response_data.append(
                     {
                         "type": request["type"],
+                        "path_name": path_name,
                         "path": request["path"],
                         "data": request["data"],
                         "response": response,

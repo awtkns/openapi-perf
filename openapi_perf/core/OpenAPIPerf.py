@@ -13,33 +13,32 @@ class OpenAPIPerf:
 
     def __init__(
         self,
+        endpoint_url: str,
+        api_schema_path: str = '/openapi.json',
         test_schema_path: str = None,
-        endpoint_url: str = None,
-        api_schema_path: str = None,
         results_dir: str = None,
+        auto_generate: bool = True,  # Added to disable test generation for unit testing
     ):
 
+        # TODO: Implement test schema loading
         if test_schema_path:
-            if not path.exists(test_schema_path):
-                raise ValueError(f"Test schema not found at {test_schema_path}")
-            # TODO: read data
+            assert path.exists(test_schema_path), f"Test schema not found at {test_schema_path}"
 
-        elif endpoint_url and api_schema_path:
-            if not endpoint_url.startswith("http"):
-                endpoint_url = "http://" + endpoint_url
+        self.endpoint_url = self.sanitize_endpoint_url(endpoint_url)
+        self.api_schema = self.get_api_schema(self.endpoint_url, api_schema_path)
 
-            self.api_schema = self.get_api_schema(endpoint_url, api_schema_path)
+        if auto_generate:
+            self._generate()
 
-            self.test_schema = Generator().generate_tests(self.api_schema)
-            self.test_schema["endpoint_url"] = endpoint_url
+            if results_dir:
+                self.write_results(results_dir)
 
-        else:
-            if api_schema_path:
-                raise ValueError(f"No endpoint url provided")
-            raise ValueError(f"No schema provided")
+    @staticmethod
+    def sanitize_endpoint_url(endpoint_url):
+        if not endpoint_url.startswith("http"):
+            endpoint_url = "http://" + endpoint_url
 
-        if results_dir:
-            self.write_results(results_dir)
+        return endpoint_url
 
     @staticmethod
     def get_api_schema(endpoint_url: str, api_schema_path: str) -> dict:
@@ -57,6 +56,11 @@ class OpenAPIPerf:
             raise Exception("No schema was found")
 
         return api_schema
+
+    def _generate(self):
+        """ Generates the tests to be run """
+        self.test_schema = Generator().generate_tests(self.api_schema)
+        self.test_schema["endpoint_url"] = self.endpoint_url
 
     # Run tests and return results
     def run(self):

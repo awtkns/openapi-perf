@@ -21,7 +21,6 @@ def test_schema_endpoint_exists():
 def test_generation():
     op = OpenAPIPerf(
         endpoint_url=ENDPOINT_URL,
-        api_schema_path=API_SCHEMA_PATH,
         results_dir=RESULTS_DIR,
     )
     results = op.run()
