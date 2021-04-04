@@ -34,7 +34,7 @@ def execute(test_schema: Dict[str, Any]) -> List[Dict[str, Any]]:
                         "response": response,
                         "response_data": response.json(),
                         "status_code": response.status_code,
-                        #"validity": str(response.status_code) in request["expected"],
+                        "validity": str(response.status_code) in request["expected"],
                         "time": response.elapsed.total_seconds(),
                     }
                 )

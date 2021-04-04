@@ -34,7 +34,12 @@ class Generator:
 
             # parse request types
             for req_type, req_data in path_data.items():
-                generated_requests = [{"type": req_type, "path": path_name, "data": {}} for _ in range(NUM_TESTS)] 
+                generated_requests = [{
+                    "type": req_type,
+                    "path": path_name,
+                    "data": {},
+                    "expected": list(req_data["responses"].keys()) if "responses" in req_data else []
+                } for _ in range(NUM_TESTS)] 
 
                 # parse request parameters
                 if "parameters" in req_data:
