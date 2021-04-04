@@ -4,7 +4,7 @@ from typing import Dict, List, Any
 NUM_TESTS = 100
 
 PARAM_TYPE_MAPPING = {
-    "integer": st.integers(),
+    "integer": st.integers(min_value=-2**63, max_value=2**63-1),
     "number": st.floats(),
     "string": st.text(),
 }
