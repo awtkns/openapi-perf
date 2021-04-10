@@ -38,7 +38,7 @@ class OpenAPIPerf:
                 self._generate()
 
         else:
-            raise ValueError(f"No test schema or endpoint provided")
+            raise ValueError("No test schema or endpoint provided")
 
         if results_dir:
             self.write_results(results_dir)
