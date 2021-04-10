@@ -1,5 +1,5 @@
 from hypothesis import given, settings, strategies as st
-from typing import Dict, List, Any, Callable, Optional
+from typing import Dict, List, Any, Callable, Optional, Union
 
 from ._types import TEST_SCHEMA, API_SCHEMA
 
@@ -13,6 +13,7 @@ PARAM_TYPE_MAPPING = {
 
 class Generator:
     TOKEN_TYPES = {"path", "query", "component"}
+    DEFAULT_TEST_ORDER = ["get", "put", "get", "post", "get", "delete", "get"]
 
     def __init__(self) -> None:
         self.resolve_data_with_strategy: Callable = None
@@ -79,11 +80,11 @@ class Generator:
                     # TODO: can a request have multiple components? Assuming no..
 
                     # resolve component
-                    if not component_schema_name in component_schemas:
+                    if component_schema_name not in component_schemas:
                         generated_component = {}
                         for (
-                                component_param_name,
-                                component_param_data,
+                            component_param_name,
+                            component_param_data,
                         ) in component_schema.items():
                             generated_component[
                                 component_param_name
@@ -105,26 +106,7 @@ class Generator:
 
                 total_generated_requests[req_type] = generated_requests
 
-            # create default test plan:
-            # get, put, get, post, get, delete, get
-            tests = []
-            get_exists = "get" in total_generated_requests
-            if get_exists:
-                get = total_generated_requests["get"]
-                if get_exists:
-                    tests.append(get)
-            if "put" in total_generated_requests:
-                tests.append(total_generated_requests["put"])
-                if get_exists:
-                    tests.append(get)
-            if "post" in total_generated_requests:
-                tests.append(total_generated_requests["post"])
-                if get_exists:
-                    tests.append(get)
-            if "delete" in total_generated_requests:
-                tests.append(total_generated_requests["delete"])
-                if get_exists:
-                    tests.append(get)
+            tests = self.build_test_plan(total_generated_requests)
 
             # reshape test list
             tests = list(zip(*tests))
@@ -132,6 +114,23 @@ class Generator:
             test_schema["paths"][path_name] = tests
 
         return test_schema
+
+    @staticmethod
+    def build_test_plan(generated_requests, test_order: List[str] = None) -> List[Any]:
+        """ Creates a test plan following a pre-defined test order """
+
+        test_order = test_order or Generator.DEFAULT_TEST_ORDER
+        methods_under_test = {
+            method: generated_requests.get(method, None) for method in set(test_order)
+        }
+
+        tests = [
+            methods_under_test[method]
+            for method in test_order
+            if methods_under_test[method]
+        ]
+
+        return tests
 
     def resolve_data_and_return(self, data_name: str, data_type: str):
         """
@@ -142,16 +141,14 @@ class Generator:
         self.resolved_data_return = []
         self.resolve_data_with_strategy(self, data_name, data_type)
         assert (
-                len(self.resolved_data_return) == NUM_TESTS
+            len(self.resolved_data_return) == NUM_TESTS
         ), f"Hypothesis didn't generate {NUM_TESTS} values"
         return self.resolved_data_return
-
 
     @staticmethod
     @settings(max_examples=NUM_TESTS)
     def resolve_data(self, data_name: str, data_type: str, data: st.data):
         """ Generate property-based data of a given type """
-
 
         self.resolved_data_return.append(
             data.draw(PARAM_TYPE_MAPPING[data_type], label=data_name)
@@ -159,7 +156,7 @@ class Generator:
 
     @staticmethod
     def _build_query_params(
-            path: str, token_type: str, token_name: str, token_value: Any
+        path: str, token_type: str, token_name: str, token_value: Any
     ) -> str:
         if token_type == "path":
             return path.replace(f"{{{token_name}}}", str(token_value))
@@ -173,25 +170,23 @@ class Generator:
 
     @staticmethod
     def add_tokens(
-            requests: List[Dict[str, Any]],
-            token_values: Dict[str, Any],
-            token_type: str,
-            token_name: str,
-    ):
+        requests: List[Dict[str, Any]],
+        token_values: Union[List[Any], Dict[str, Any]],
+        token_type: str,
+        token_name: str,
+    ) -> List[Dict[str, Any]]:
         """ Add a parameter token to a request """
         assert token_type in Generator.TOKEN_TYPES
 
         for i, request in enumerate(requests):
-            requests[i]["path"] = Generator._build_query_params(
-                request["path"], token_type, token_name, token_values[i]
-            )
-
             if token_type == "component":
                 requests[i]["data"] = {
                     param_name: param_data[i]
                     for param_name, param_data in token_values.items()
                 }
             else:
-                raise Exception("Unexpected parameter token type")
+                requests[i]["path"] = Generator._build_query_params(
+                    request["path"], token_type, token_name, token_values[i]
+                )
 
         return requests
