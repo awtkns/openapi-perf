@@ -15,7 +15,7 @@ class OpenAPIPerf:
 
     def __init__(
         self,
-        endpoint_url: str,
+        endpoint_url: Optional[str] = None,
         api_schema_path: str = "/openapi.json",
         test_schema_path: Optional[str] = None,
         results_dir: Optional[str] = None,
@@ -29,7 +29,6 @@ class OpenAPIPerf:
 
             with open(test_schema_path) as f:
                 self.test_schema = json.load(f)
-
 
         elif endpoint_url:
             self.endpoint_url = self.sanitize_endpoint_url(endpoint_url)

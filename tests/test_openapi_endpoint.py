@@ -20,17 +20,20 @@ def test_schema_endpoint_exists():
 
 def test_generation():
     op = OpenAPIPerf(
-        endpoint_url = ENDPOINT_URL,
-        results_dir = RESULTS_DIR,
+        endpoint_url=ENDPOINT_URL,
+        results_dir=RESULTS_DIR,
     )
     results = op.run()
     results = pd.DataFrame(results)
+
     results.to_csv(RESULTS_DIR + "/results.csv")
+
 
 def test_restoration():
     op = OpenAPIPerf(
-        test_schema_path = RESULTS_DIR + '/test_schema.json',
-        results_dir = RESULTS_DIR,
+        endpoint_url=ENDPOINT_URL,
+        test_schema_path=RESULTS_DIR + "/test_schema.json",
+        results_dir=RESULTS_DIR,
     )
     results = op.run()
     results = pd.DataFrame(results)
