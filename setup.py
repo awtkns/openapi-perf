@@ -1,20 +1,20 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.1'
+VERSION = "0.0.1"
 
 setup(
-    name='openapi-perf',
+    name="openapi-perf",
     version=VERSION,
-    author='Adam Watkins, Ethan Haid',
-    author_email='cadamrun@gmail.com',
+    author="Adam Watkins, Ethan Haid",
+    author_email="cadamrun@gmail.com",
     packages=find_packages(exclude=("tests.*", "tests")),
-    url='https://github.com/awtkns/openapi-perf',
-    license='MIT',
-    description='An Automatic REST Endpoint Performance Test Generation Suite',
-    long_description=open('README.md').read(),
+    url="https://github.com/awtkns/openapi-perf",
+    license="MIT",
+    description="An Automatic REST Endpoint Performance Test Generation Suite",
+    long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    install_requires=open('requirements.txt').read().splitlines(),
-    python_requires='>=3.6',
+    install_requires=open("requirements.txt").read().splitlines(),
+    python_requires=">=3.6",
     keywords=["OpenAPI", "REST", "Performance Testing"],
     classifiers=[
         "Operating System :: OS Independent",
@@ -43,5 +43,5 @@ setup(
         "Topic :: Software Development :: Testing",
         "Topic :: Software Development :: Testing :: Traffic Generation",
         "Typing :: Typed",
-    ]
+    ],
 )

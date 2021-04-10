@@ -1,1 +1,1 @@
-from .OpenAPIPerf import OpenAPIPerf
+from .perf import OpenAPIPerf

@@ -3,8 +3,8 @@ from urllib.parse import urljoin
 import json
 import requests
 
-from .Generator import Generator
-from .Executor import execute
+from ._gen import Generator
+from ._exec import execute
 
 
 class OpenAPIPerf:
@@ -14,7 +14,7 @@ class OpenAPIPerf:
     def __init__(
         self,
         endpoint_url: str,
-        api_schema_path: str = '/openapi.json',
+        api_schema_path: str = "/openapi.json",
         test_schema_path: str = None,
         results_dir: str = None,
         auto_generate: bool = True,  # Added to disable test generation for unit testing
@@ -22,7 +22,9 @@ class OpenAPIPerf:
 
         # TODO: Implement test schema loading
         if test_schema_path:
-            assert path.exists(test_schema_path), f"Test schema not found at {test_schema_path}"
+            assert path.exists(
+                test_schema_path
+            ), f"Test schema not found at {test_schema_path}"
 
         self.endpoint_url = self.sanitize_endpoint_url(endpoint_url)
         self.api_schema = self.get_api_schema(self.endpoint_url, api_schema_path)
