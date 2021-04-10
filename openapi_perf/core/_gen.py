@@ -1,5 +1,6 @@
+from typing import Dict, List, Any, Callable, Union, Optional, Tuple
+
 from hypothesis import given, settings, strategies as st
-from typing import Dict, List, Any, Callable, Optional, Union
 
 from ._types import TEST_SCHEMA, API_SCHEMA
 
@@ -11,18 +12,29 @@ PARAM_TYPE_MAPPING = {
 }
 
 
+def extract_component_schema(
+    api_schema: API_SCHEMA, request_data: Dict[Any, Any]
+) -> Tuple[str, Dict[str, Any]]:
+    name = request_data["requestBody"]["content"]["application/json"]["schema"]["$ref"]
+    name = name.split("/")[-1]
+
+    schema = api_schema["components"]["schemas"][name]["properties"]
+
+    return name, schema
+
+
 class Generator:
     TOKEN_TYPES = {"path", "query", "component"}
     DEFAULT_TEST_ORDER = ["get", "put", "get", "post", "get", "delete", "get"]
 
     def __init__(self) -> None:
-        self.resolve_data_with_strategy: Callable = None
+        self.resolve_data_with_strategy: Callable[..., Any]
         self.resolved_data_return: List[Dict[str, Any]] = []
 
     def generate_tests(self, api_schema: API_SCHEMA) -> TEST_SCHEMA:
         """ Generate test schema of property-based tests """
 
-        test_schema = {
+        test_schema: TEST_SCHEMA = {
             "endpoint_url": "",
             "paths": {},
         }
@@ -31,7 +43,7 @@ class Generator:
         for path_name, path_data in api_schema["paths"].items():
             tokens = {}
             component_schemas = {}
-            total_generated_requests = {}
+            total_generated_requests: Dict[str, Any] = {}
 
             # reset data generation strategy
             self.resolve_data_with_strategy = given(st.data())(self.resolve_data)
@@ -71,12 +83,10 @@ class Generator:
 
                 # parse request components
                 if "requestBody" in req_data:
-                    component_schema_name = req_data["requestBody"]["content"][
-                        "application/json"
-                    ]["schema"]["$ref"].split("/")[-1]
-                    component_schema = api_schema["components"]["schemas"][
-                        component_schema_name
-                    ]["properties"]
+                    component_schema_name, component_schema = extract_component_schema(
+                        api_schema, req_data
+                    )
+
                     # TODO: can a request have multiple components? Assuming no..
 
                     # resolve component
@@ -116,7 +126,9 @@ class Generator:
         return test_schema
 
     @staticmethod
-    def build_test_plan(generated_requests, test_order: List[str] = None) -> List[Any]:
+    def build_test_plan(
+        generated_requests: Dict[str, Any], test_order: Optional[List[str]] = None
+    ) -> List[Any]:
         """ Creates a test plan following a pre-defined test order """
 
         test_order = test_order or Generator.DEFAULT_TEST_ORDER
@@ -132,7 +144,7 @@ class Generator:
 
         return tests
 
-    def resolve_data_and_return(self, data_name: str, data_type: str):
+    def resolve_data_and_return(self, data_name: str, data_type: str) -> List[Any]:
         """
         Wrapper for the static resolve_data function
         Necessary to enable Hypothesis to return generated values
@@ -147,11 +159,13 @@ class Generator:
 
     @staticmethod
     @settings(max_examples=NUM_TESTS)
-    def resolve_data(self, data_name: str, data_type: str, data: st.data):
+    def resolve_data(
+        self: "Generator", data_name: str, data_type: str, data: st.SearchStrategy[Any]
+    ) -> None:
         """ Generate property-based data of a given type """
 
         self.resolved_data_return.append(
-            data.draw(PARAM_TYPE_MAPPING[data_type], label=data_name)
+            data.draw(PARAM_TYPE_MAPPING[data_type], label=data_name)  # type: ignore
         )
 
     @staticmethod
@@ -180,13 +194,18 @@ class Generator:
 
         for i, request in enumerate(requests):
             if token_type == "component":
+                assert type(token_values) is dict
+
                 requests[i]["data"] = {
                     param_name: param_data[i]
-                    for param_name, param_data in token_values.items()
+                    for param_name, param_data in token_values.items()  # type: ignore
                 }
             else:
                 requests[i]["path"] = Generator._build_query_params(
-                    request["path"], token_type, token_name, token_values[i]
+                    path=request["path"],
+                    token_type=token_type,
+                    token_name=token_name,
+                    token_value=token_values[i],  # type: ignore
                 )
 
         return requests

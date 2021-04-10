@@ -1,8 +1,9 @@
-from typing import Dict, Any, Callable, List
-
+from typing import Dict, Any, Callable
 from urllib.parse import urljoin
+
 import requests
-import time
+
+from ._types import TEST_RESULTS
 
 REQ_TYPE_MAPPING: Dict[str, Callable[[Any], Any]] = {
     "get": requests.get,
@@ -12,7 +13,7 @@ REQ_TYPE_MAPPING: Dict[str, Callable[[Any], Any]] = {
 }
 
 
-def execute(test_schema: Dict[str, Any]) -> List[Dict[str, Any]]:
+def execute(test_schema: Dict[str, Any]) -> TEST_RESULTS:
     endpoint_url = test_schema["endpoint_url"]
     response_data = []
 
@@ -26,7 +27,7 @@ def execute(test_schema: Dict[str, Any]) -> List[Dict[str, Any]]:
                 # noinspection PyArgumentList
                 response: requests.Response = make_request(
                     url, data=request["data"]
-                )  # typing ignore
+                )  # type: ignore
 
                 response_data.append(
                     {
