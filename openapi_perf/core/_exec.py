@@ -21,9 +21,12 @@ def execute(test_schema: Dict[str, Any]) -> List[Dict[str, Any]]:
         for test in path_tests:
             for request in test:
                 make_request = REQ_TYPE_MAPPING[request["type"]]
+                url = urljoin(endpoint_url, request["path"])
+
+                # noinspection PyArgumentList
                 response: requests.Response = make_request(
-                    urljoin(endpoint_url, request["path"]), data=request["data"]
-                )
+                    url, data=request["data"]
+                )  # typing ignore
 
                 response_data.append(
                     {

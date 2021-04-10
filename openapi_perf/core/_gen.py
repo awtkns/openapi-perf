@@ -1,8 +1,9 @@
 from hypothesis import given, settings, strategies as st
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Callable, Optional
+
+from ._types import TEST_SCHEMA, API_SCHEMA
 
 NUM_TESTS = 100
-
 PARAM_TYPE_MAPPING = {
     "integer": st.integers(min_value=-(2 ** 63), max_value=2 ** 63 - 1),
     "number": st.floats(),
@@ -11,12 +12,15 @@ PARAM_TYPE_MAPPING = {
 
 
 class Generator:
+    TOKEN_TYPES = {"path", "query", "component"}
+
     def __init__(self) -> None:
-        self.resolve_data_with_strategy = None
+        self.resolve_data_with_strategy: Callable = None
         self.resolved_data_return: List[Dict[str, Any]] = []
 
-    # Generate test schema of property-based tests
-    def generate_tests(self, api_schema: {}):
+    def generate_tests(self, api_schema: API_SCHEMA) -> TEST_SCHEMA:
+        """ Generate test schema of property-based tests """
+
         test_schema = {
             "endpoint_url": "",
             "paths": {},
@@ -51,7 +55,7 @@ class Generator:
 
                         # resolve parameter to data
                         parameter_id = parameter["in"] + "/" + parameter["name"]
-                        if not parameter_id in tokens:
+                        if parameter_id not in tokens:
                             tokens[parameter_id] = self.resolve_data_and_return(
                                 parameter_id, parameter["schema"]["type"]
                             )
@@ -78,8 +82,8 @@ class Generator:
                     if not component_schema_name in component_schemas:
                         generated_component = {}
                         for (
-                            component_param_name,
-                            component_param_data,
+                                component_param_name,
+                                component_param_data,
                         ) in component_schema.items():
                             generated_component[
                                 component_param_name
@@ -129,42 +133,60 @@ class Generator:
 
         return test_schema
 
-    # Wrapper for the static resolve_data function
-    # Necessary to enable Hypothesis to return generated values
     def resolve_data_and_return(self, data_name: str, data_type: str):
+        """
+        Wrapper for the static resolve_data function
+        Necessary to enable Hypothesis to return generated values
+        """
+
         self.resolved_data_return = []
         self.resolve_data_with_strategy(self, data_name, data_type)
         assert (
-            len(self.resolved_data_return) == NUM_TESTS
+                len(self.resolved_data_return) == NUM_TESTS
         ), f"Hypothesis didn't generate {NUM_TESTS} values"
         return self.resolved_data_return
 
-    # Generate property-based data of a given type
+
     @staticmethod
     @settings(max_examples=NUM_TESTS)
     def resolve_data(self, data_name: str, data_type: str, data: st.data):
+        """ Generate property-based data of a given type """
+
+
         self.resolved_data_return.append(
             data.draw(PARAM_TYPE_MAPPING[data_type], label=data_name)
         )
 
-    # Add a parameter token to a request
     @staticmethod
-    def add_tokens(requests: [{}], token_values: [], token_type: str, token_name: str):
-        for i in range(len(requests)):
-            if token_type == "path":
-                requests[i]["path"] = requests[i]["path"].replace(
-                    "{" + token_name + "}", str(token_values[i])
-                )
-            elif token_type == "query":
-                separator = "&" if "?" in requests[i]["path"] else "?"
-                requests[i]["path"] = (
-                    requests[i]["path"]
-                    + separator
-                    + token_name
-                    + "="
-                    + str(token_values[i])
-                )
-            elif token_type == "component":
+    def _build_query_params(
+            path: str, token_type: str, token_name: str, token_value: Any
+    ) -> str:
+        if token_type == "path":
+            return path.replace(f"{{{token_name}}}", str(token_value))
+
+        elif token_type == "query":
+            separator = "&" if "?" in path else "?"
+            return f"{path}{separator}{token_name}={token_value}"
+
+        else:
+            return path
+
+    @staticmethod
+    def add_tokens(
+            requests: List[Dict[str, Any]],
+            token_values: Dict[str, Any],
+            token_type: str,
+            token_name: str,
+    ):
+        """ Add a parameter token to a request """
+        assert token_type in Generator.TOKEN_TYPES
+
+        for i, request in enumerate(requests):
+            requests[i]["path"] = Generator._build_query_params(
+                request["path"], token_type, token_name, token_values[i]
+            )
+
+            if token_type == "component":
                 requests[i]["data"] = {
                     param_name: param_data[i]
                     for param_name, param_data in token_values.items()
