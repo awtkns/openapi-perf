@@ -33,4 +33,32 @@ pip install openapi-perf
 ```
 
 ## Usage
-Coming soon
+### Test Generation
+This will create generate property-based performance tests for an endpoint and save the test schema to your results directory.
+```python
+from openapi_perf import OpenAPIPerf
+
+op = OpenAPIPerf(
+  endpoint_url = "http://localhost:5000",
+  results_dir = "/path/to/results/directory"
+)
+```
+
+You can also load existing tests from a test schema file like this:
+```python
+op = OpenAPIPerf(
+  test_schema_path = "path/to/test_schema.json"
+)
+```
+Schema files can be modified to configure test execution.
+
+### Test Execution
+
+To run these tests, use
+```python
+op.run()
+```
+
+This will generate a report pdf file in your results directory
+
+For detailed usage, refer to our [docs](https://openapi-perf.awtkns.com)

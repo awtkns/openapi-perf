@@ -22,20 +22,27 @@ class OpenAPIPerf:
         auto_generate: bool = True,  # Added to disable test generation for unit testing
     ):
 
-        # TODO: Implement test schema loading
         if test_schema_path:
             assert path.exists(
                 test_schema_path
             ), f"Test schema not found at {test_schema_path}"
 
-        self.endpoint_url = self.sanitize_endpoint_url(endpoint_url)
-        self.api_schema = self.get_api_schema(self.endpoint_url, api_schema_path)
+            with open(test_schema_path) as f:
+                self.test_schema = json.load(f)
 
-        if auto_generate:
-            self._generate()
 
-            if results_dir:
-                self.write_results(results_dir)
+        elif endpoint_url:
+            self.endpoint_url = self.sanitize_endpoint_url(endpoint_url)
+            self.api_schema = self.get_api_schema(self.endpoint_url, api_schema_path)
+
+            if auto_generate:
+                self._generate()
+
+        else:
+            raise ValueError(f"No test schema or endpoint provided")
+
+        if results_dir:
+            self.write_results(results_dir)
 
     @staticmethod
     def sanitize_endpoint_url(endpoint_url: str) -> str:
@@ -73,9 +80,6 @@ class OpenAPIPerf:
     def write_results(self, results_dir: str) -> None:
         if not path.exists(results_dir):
             mkdir(results_dir)
-
-        with open(results_dir + "/api_schema.json", "w") as out:
-            json.dump(self.api_schema, out)
 
         with open(results_dir + "/test_schema.json", "w") as out:
             json.dump(self.test_schema, out)
