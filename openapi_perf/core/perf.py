@@ -4,10 +4,10 @@ import json
 
 from typing import Optional
 
-from . import _utils
+from . import _utils, PerfResults
 from ._gen import Generator
 from ._exec import execute
-from ._types import API_SCHEMA, TEST_SCHEMA, TEST_RESULTS
+from ._types import API_SCHEMA, TEST_SCHEMA
 
 
 class OpenAPIPerf:
@@ -52,7 +52,7 @@ class OpenAPIPerf:
         return test_schema
 
     # Run tests and return results
-    def run(self) -> TEST_RESULTS:
+    def run(self) -> PerfResults:
         return execute(self.test_schema)
 
     def write_results(self, results_dir: str) -> None:
