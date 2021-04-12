@@ -22,8 +22,7 @@ def test_generation():
     op = OpenAPIPerf(
         endpoint_url=ENDPOINT_URL,
         results_dir=RESULTS_DIR,
-    )
-    results = op.run()
+    ).run()
 
 
 def test_restoration():

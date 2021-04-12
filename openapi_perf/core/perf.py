@@ -12,6 +12,7 @@ from ._types import API_SCHEMA, TEST_SCHEMA
 
 class OpenAPIPerf:
     test_schema: TEST_SCHEMA = {}
+    endpoint_url: str
 
     def __init__(
         self,
@@ -19,24 +20,24 @@ class OpenAPIPerf:
         api_schema_path: str = "/openapi.json",
         test_schema_path: Optional[str] = None,
         results_dir: Optional[str] = None,
-        auto_generate: bool = True,  # Added to disable test generation for unit testing
     ):
-
         if test_schema_path:
             assert path.exists(
                 test_schema_path
             ), f"Test schema not found at {test_schema_path}"
 
             with open(test_schema_path) as f:
-                self.test_schema = json.load(f)
-                _utils.validate_test_schema(self.test_schema)
+                test_schema = json.load(f)
+                _utils.validate_test_schema(test_schema)
+
+                self.test_schema = test_schema
+                self.endpoint_url = self.test_schema["endpoint_url"]
 
         elif endpoint_url:
             self.endpoint_url = _utils.sanitize_endpoint_url(endpoint_url)
-            api_schema = _utils.get_api_schema(self.endpoint_url, api_schema_path)
 
-            if auto_generate:
-                self.test_schema = self._generate_test_schema(api_schema)
+            api_schema = _utils.get_api_schema(self.endpoint_url, api_schema_path)
+            self.test_schema = self._generate_test_schema(api_schema)
 
         else:
             raise ValueError("No test schema or endpoint provided")
