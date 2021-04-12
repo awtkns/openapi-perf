@@ -24,9 +24,6 @@ def test_generation():
         results_dir=RESULTS_DIR,
     )
     results = op.run()
-    results = pd.DataFrame(results)
-
-    results.to_csv(RESULTS_DIR + "/results.csv")
 
 
 def test_restoration():
@@ -36,5 +33,4 @@ def test_restoration():
         results_dir=RESULTS_DIR,
     )
     results = op.run()
-    results = pd.DataFrame(results)
     results.to_csv(RESULTS_DIR + "/results.csv")

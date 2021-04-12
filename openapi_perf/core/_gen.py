@@ -26,9 +26,9 @@ def extract_component_schema(
 class Generator:
     TOKEN_TYPES = {"path", "query", "component"}
     DEFAULT_TEST_ORDER = ["get", "put", "get", "post", "get", "delete", "get"]
+    strategy_resolver: Any
 
     def __init__(self) -> None:
-        self.resolve_data_with_strategy: Callable[..., Any]
         self.resolved_data_return: List[Dict[str, Any]] = []
 
     def generate_tests(self, api_schema: API_SCHEMA) -> TEST_SCHEMA:
@@ -46,7 +46,7 @@ class Generator:
             total_generated_requests: Dict[str, Any] = {}
 
             # reset data generation strategy
-            self.resolve_data_with_strategy = given(st.data())(self.resolve_data)
+            self.strategy_resolver = given(st.data())(self.resolve_data)
 
             # parse request types
             for req_type, req_data in path_data.items():
@@ -151,7 +151,7 @@ class Generator:
         """
 
         self.resolved_data_return = []
-        self.resolve_data_with_strategy(self, data_name, data_type)
+        self.strategy_resolver(self, data_name, data_type)
         assert (
             len(self.resolved_data_return) == NUM_TESTS
         ), f"Hypothesis didn't generate {NUM_TESTS} values"

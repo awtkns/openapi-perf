@@ -1,3 +1,3 @@
-from .core.perf import OpenAPIPerf
+from .core import OpenAPIPerf, PerfResults
 
-__all__ = ["OpenAPIPerf"]
+__all__ = ["OpenAPIPerf", "PerfResults"]
