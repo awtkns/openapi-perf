@@ -25,10 +25,7 @@ def test_retrieve_api_schema(endpoint: str, api_schema_path: str):
 
 
 def test_validate_test_schema():
-    schema = {
-        "endpoint_url": "http://localhost:5000/",
-        "paths": {}
-    }
+    schema = {"endpoint_url": "http://localhost:5000/", "paths": {}}
 
     assert _utils.validate_test_schema(schema)
 
