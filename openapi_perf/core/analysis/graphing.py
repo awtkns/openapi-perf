@@ -1,34 +1,32 @@
-from typing import Union
-from os import PathLike
+from itertools import chain
 
 import matplotlib.pyplot as plt  # type ignore
 import pandas as pd
 
-FILE_PATH = Union[str, PathLike]
 
+def generate_graphs(
+    results: pd.DataFrame
+):
+    df = results
+    routes: pd.DataFrame = df['path_name'].unique()
 
-def load_results(file_path: FILE_PATH) -> pd.DataFrame:
-    return pd.read_csv(file_path)
+    if len(routes) % 2:
+        rows = len(routes) + 1
+    else:
+        rows = len(routes)
+    rows = int(rows / 2)
 
+    fig, axes = plt.subplots(rows, 2, figsize=(10, 8))
+    axes = list(chain(*axes))  # flatten axis array
 
-def extract_params(row: pd.Series) -> pd.Series:
-    # todo: this is a naive implementation
-    split = row["path"].split("?")
-    row["params"] = split[1] if len(split) == 2 else None
-    row["path"] = split[0]
+    for i, route in enumerate(routes):
+        ax = axes[i]
 
-    return row
+        df[(df.path_name == route)].boxplot(by=["type", "status_code"], column="time", rot=30, ax=ax)
+        ax.title.set_text(f"Route: {route}")
+        ax.ylabel = "Response Time (s)"
 
-
-if __name__ == "__main__":
-    df = load_results("results.csv")
-    df = df.apply(extract_params, axis=1)
-
-    correct = df[df.time < 0.01]
-    errors = df[df.time > 0.01]
-    plot = correct.boxplot(by=["type", "status_code"], column="time", rot=30)
-
-    plot.ylabel = "Response Time (s)"
+    fig.suptitle('OpenAPI Performance Analysis', fontsize=20)
+    plt.tight_layout()
     plt.show()
 
-    print(errors)
