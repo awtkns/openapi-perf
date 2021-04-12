@@ -24,23 +24,36 @@ def execute(test_schema: Dict[str, Any]) -> TEST_RESULTS:
                 make_request = REQ_TYPE_MAPPING[request["type"]]
                 url = urljoin(endpoint_url, request["path"])
 
+
+
                 # noinspection PyArgumentList
+                print(request["data"])
+                for key in request["data"]:
+                    print(type(request["data"][key]))
+
+                data = request["data"]
+
                 response: requests.Response = make_request(
-                    url, data=request["data"]
+                    url, json=data,  headers={'Content-Type': 'application/json; charset=UTF-8'},
                 )  # type: ignore
 
-                response_data.append(
-                    {
+
+                info = {
                         "type": request["type"],
                         "path_name": path_name,
                         "path": request["path"],
                         "data": request["data"],
                         "response": response,
-                        "response_data": response.json(),
                         "status_code": response.status_code,
                         "validity": str(response.status_code) in request["expected"],
                         "time": response.elapsed.total_seconds(),
                     }
-                )
+
+                try:
+                    info["response_data"] = response.json()
+                except Exception:
+                    pass
+
+                response_data.append(info)
 
     return response_data
