@@ -31,7 +31,6 @@ def test_generation():
 
 def test_restoration():
     op = OpenAPIPerf(
-        endpoint_url=ENDPOINT_URL,
         test_schema_path=RESULTS_DIR + "/test_schema.json",
         results_dir=RESULTS_DIR,
     )

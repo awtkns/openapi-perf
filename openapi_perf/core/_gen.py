@@ -117,10 +117,6 @@ class Generator:
                 total_generated_requests[req_type] = generated_requests
 
             tests = self.build_test_plan(total_generated_requests)
-
-            # reshape test list
-            tests = list(zip(*tests))
-
             test_schema["paths"][path_name] = tests
 
         return test_schema
@@ -141,6 +137,9 @@ class Generator:
             for method in test_order
             if methods_under_test[method]
         ]
+
+        # reshape test list
+        tests = list(zip(*tests))
 
         return tests
 
