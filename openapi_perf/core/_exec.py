@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from ._types import TEST_RESULTS
+from .results import PerfResults
 
 REQ_TYPE_MAPPING: Dict[str, Callable[[Any], Any]] = {
     "get": requests.get,
@@ -13,7 +13,7 @@ REQ_TYPE_MAPPING: Dict[str, Callable[[Any], Any]] = {
 }
 
 
-def execute(test_schema: Dict[str, Any]) -> TEST_RESULTS:
+def execute(test_schema: Dict[str, Any]) -> PerfResults:
     endpoint_url = test_schema["endpoint_url"]
     response_data = []
 
@@ -25,22 +25,35 @@ def execute(test_schema: Dict[str, Any]) -> TEST_RESULTS:
                 url = urljoin(endpoint_url, request["path"])
 
                 # noinspection PyArgumentList
+                print(request["data"])
+                for key in request["data"]:
+                    print(type(request["data"][key]))
+
+                data = request["data"]
+
                 response: requests.Response = make_request(
-                    url, data=request["data"]
+                    url,
+                    json=data,
+                    headers={"Content-Type": "application/json; charset=UTF-8"},
                 )  # type: ignore
 
-                response_data.append(
-                    {
-                        "type": request["type"],
-                        "path_name": path_name,
-                        "path": request["path"],
-                        "data": request["data"],
-                        "response": response,
-                        "response_data": response.json(),
-                        "status_code": response.status_code,
-                        "validity": str(response.status_code) in request["expected"],
-                        "time": response.elapsed.total_seconds(),
-                    }
-                )
+                info = {
+                    "type": request["type"],
+                    "path_name": path_name,
+                    "path": request["path"],
+                    "data": request["data"],
+                    "response": response,
+                    "status_code": response.status_code,
+                    "validity": str(response.status_code) in request["expected"],
+                    "time": response.elapsed.total_seconds(),
+                }
 
-    return response_data
+                try:
+                    info["response_data"] = response.json()
+                except Exception:
+                    info["response_data"] = None
+                    pass
+
+                response_data.append(info)
+
+    return PerfResults(response_data)

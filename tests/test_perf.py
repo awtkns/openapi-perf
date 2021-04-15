@@ -22,11 +22,7 @@ def test_generation():
     op = OpenAPIPerf(
         endpoint_url=ENDPOINT_URL,
         results_dir=RESULTS_DIR,
-    )
-    results = op.run()
-    results = pd.DataFrame(results)
-
-    results.to_csv(RESULTS_DIR + "/results.csv")
+    ).run()
 
 
 def test_restoration():
@@ -35,5 +31,4 @@ def test_restoration():
         results_dir=RESULTS_DIR,
     )
     results = op.run()
-    results = pd.DataFrame(results)
     results.to_csv(RESULTS_DIR + "/results.csv")

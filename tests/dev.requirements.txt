@@ -5,6 +5,7 @@ fastapi
 fastapi_crudrouter
 requests
 pandas
+matplotlib
 hypothesis
 
 async-generator; python_version=='3.6'
