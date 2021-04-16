@@ -1,4 +1,4 @@
-from typing import Dict, List, Any, Callable, Union, Optional, Tuple
+from typing import Dict, List, Any, Union, Optional, Tuple
 
 from hypothesis import given, settings, strategies as st
 
