@@ -1,8 +1,9 @@
-from typing import Dict, List, Any, Callable, Union, Optional, Tuple
+from typing import Dict, List, Any, Union, Optional, Tuple
 
 from hypothesis import given, settings, strategies as st
 
-from ._types import TEST_SCHEMA, API_SCHEMA
+from ._types import API_SCHEMA
+from .schemas import TestSchema
 
 NUM_TESTS = 100
 PARAM_TYPE_MAPPING = {
@@ -31,13 +32,9 @@ class Generator:
     def __init__(self) -> None:
         self.resolved_data_return: List[Dict[str, Any]] = []
 
-    def generate_tests(self, api_schema: API_SCHEMA) -> TEST_SCHEMA:
+    def generate_tests(self, api_schema: API_SCHEMA, endpoint_url: str) -> TestSchema:
         """ Generate test schema of property-based tests """
-
-        test_schema: TEST_SCHEMA = {
-            "endpoint_url": "",
-            "paths": {},
-        }
+        test_schema = TestSchema(endpoint_url)
 
         # parse paths
         for path_name, path_data in api_schema["paths"].items():
@@ -120,8 +117,7 @@ class Generator:
 
             # reshape test list
             tests = list(zip(*tests))
-
-            test_schema["paths"][path_name] = tests
+            test_schema.add_tests(path_name, tests)
 
         return test_schema
 

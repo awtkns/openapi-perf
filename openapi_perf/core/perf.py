@@ -7,11 +7,12 @@ from typing import Optional
 from . import _utils, PerfResults
 from ._gen import Generator
 from ._exec import execute
-from ._types import API_SCHEMA, TEST_SCHEMA
+from ._types import API_SCHEMA
+from .schemas import TestSchema
 
 
 class OpenAPIPerf:
-    test_schema: TEST_SCHEMA = {}
+    test_schema: TestSchema
     endpoint_url: str
 
     def __init__(
@@ -22,16 +23,7 @@ class OpenAPIPerf:
         results_dir: Optional[str] = None,
     ):
         if test_schema_path:
-            assert path.exists(
-                test_schema_path
-            ), f"Test schema not found at {test_schema_path}"
-
-            with open(test_schema_path) as f:
-                test_schema = json.load(f)
-                _utils.validate_test_schema(test_schema)
-
-                self.test_schema = test_schema
-                self.endpoint_url = self.test_schema["endpoint_url"]
+            self.test_schema = TestSchema.load(test_schema_path)
 
         elif endpoint_url:
             self.endpoint_url = _utils.sanitize_endpoint_url(endpoint_url)
@@ -45,10 +37,9 @@ class OpenAPIPerf:
         if results_dir:
             self.write_results(results_dir)
 
-    def _generate_test_schema(self, api_schema: API_SCHEMA) -> TEST_SCHEMA:
+    def _generate_test_schema(self, api_schema: API_SCHEMA) -> TestSchema:
         """ Generates the tests to be run """
-        test_schema = Generator().generate_tests(api_schema)
-        test_schema["endpoint_url"] = self.endpoint_url
+        test_schema = Generator().generate_tests(api_schema, self.endpoint_url)
 
         return test_schema
 
@@ -60,5 +51,4 @@ class OpenAPIPerf:
         if not path.exists(results_dir):
             mkdir(results_dir)
 
-        with open(results_dir + "/test_schema.json", "w") as out:
-            json.dump(self.test_schema, out)
+        self.test_schema.save(f"{results_dir}/test_schema.json")

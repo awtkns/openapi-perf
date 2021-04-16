@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 import requests
 
 from .results import PerfResults
+from .schemas import TestSchema
 
 REQ_TYPE_MAPPING: Dict[str, Callable[[Any], Any]] = {
     "get": requests.get,
@@ -13,12 +14,12 @@ REQ_TYPE_MAPPING: Dict[str, Callable[[Any], Any]] = {
 }
 
 
-def execute(test_schema: Dict[str, Any]) -> PerfResults:
-    endpoint_url = test_schema["endpoint_url"]
+def execute(test_schema: TestSchema) -> PerfResults:
+    endpoint_url = test_schema.endpoint_url
     response_data = []
 
     # TODO: multi-thread this
-    for path_name, path_tests in test_schema["paths"].items():
+    for path_name, path_tests in test_schema.paths.items():
         for test in path_tests:
             for request in test:
                 make_request = REQ_TYPE_MAPPING[request["type"]]

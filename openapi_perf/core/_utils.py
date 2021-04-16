@@ -2,18 +2,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from ._types import API_SCHEMA, TEST_SCHEMA
-
-
-def validate_test_schema(test_schema: TEST_SCHEMA) -> bool:
-    try:
-        assert type(test_schema) is dict
-        assert type(test_schema.get("endpoint_url")) is str
-        assert type(test_schema.get("paths")) is dict
-    except AssertionError:
-        raise ValueError("Invalid Test Schema Provided")
-
-    return True
+from ._types import API_SCHEMA
 
 
 def sanitize_endpoint_url(endpoint_url: str) -> str:
