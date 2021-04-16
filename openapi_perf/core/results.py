@@ -24,3 +24,15 @@ class PerfResults:
 
     def plot(self) -> None:
         graphing.generate_graphs(self.results)
+
+
+class RegressionResults:
+    def __init__(self, new: PerfResults, old: PerfResults) -> None:
+        self.new = new
+        self.old = old
+
+    def plot(self) -> None:
+        graphing.plot_regression(
+            self.new.results,
+            self.old.results
+        )
