@@ -25,9 +25,7 @@ class TestSchema:
 
     @staticmethod
     def load(path: str) -> "TestSchema":
-        assert os.path.exists(
-            path
-        ), f"Test schema not found at {path}"
+        assert os.path.exists(path), f"Test schema not found at {path}"
 
         with open(path) as fp:
             data = json.load(fp)
