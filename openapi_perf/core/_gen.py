@@ -7,7 +7,7 @@ from ._types import TEST_SCHEMA, API_SCHEMA
 NUM_TESTS = 100
 PARAM_TYPE_MAPPING = {
     "integer": st.integers(min_value=-(2 ** 63), max_value=2 ** 63 - 1),
-    "number": st.floats(),
+    "number": st.floats(allow_nan=False, allow_infinity=False),
     "string": st.text(),
 }
 
