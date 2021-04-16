@@ -1,12 +1,9 @@
 from os import path, mkdir
-
-import json
-
 from typing import Optional
 
 from . import _utils, PerfResults
-from ._gen import Generator
 from ._exec import execute
+from ._gen import Generator
 from ._types import API_SCHEMA
 from .schemas import TestSchema
 
