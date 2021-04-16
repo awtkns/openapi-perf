@@ -8,13 +8,13 @@ class ORMModel(BaseModel):
         orm_mode = True
 
 
-class Potato(BaseModel):
+class Potato(ORMModel):
     thickness: float
     mass: float
     color: str
     type: str
 
 
-class Carrot(BaseModel):
+class Carrot(ORMModel):
     length: float
     color: str = "Orange"
