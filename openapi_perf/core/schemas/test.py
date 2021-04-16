@@ -12,6 +12,7 @@ class TestSchema:
 
     def __init__(self, endpoint_url: str) -> None:
         self._endpoint_url = endpoint_url
+        self._paths = {}
 
     def add_tests(self, path: str, tests: List[Any]) -> None:
         self._paths[path] = tests

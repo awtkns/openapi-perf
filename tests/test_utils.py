@@ -1,4 +1,4 @@
-from pytest import mark, raises
+from pytest import mark
 
 from openapi_perf.core import _utils
 
@@ -22,16 +22,3 @@ def test_retrieve_api_schema(endpoint: str, api_schema_path: str):
     assert type(schema) is dict
 
     return schema
-
-
-def test_validate_test_schema():
-    schema = {"endpoint_url": "http://localhost:5000/", "paths": {}}
-
-    assert _utils.validate_test_schema(schema)
-
-
-def test_validate_test_schema_fail():
-    schema = {}
-
-    with raises(ValueError):
-        _utils.validate_test_schema(schema)
