@@ -1,4 +1,4 @@
-from typing import Dict, Any, Callable
+from typing import Dict, Any, Callable, List
 from urllib.parse import urljoin
 
 import concurrent.futures
@@ -15,15 +15,16 @@ REQ_TYPE_MAPPING: Dict[str, Callable[[Any], Any]] = {
     "delete": requests.delete,
 }
 
+
 class Executor:
     _lock: threading.Lock
     endpoint_url: str
-    response_data: []
+    response_data: List[Any]
 
     def __init__(self) -> None:
         self._lock = threading.Lock()
 
-    def execute(self, test_schema: Dict[str, Any]) -> PerfResults:
+    def execute(self, test_schema: TestSchema) -> PerfResults:
         self.endpoint_url = test_schema.endpoint_url
         self.response_data = []
 
@@ -36,7 +37,7 @@ class Executor:
 
         return PerfResults(self.response_data)
 
-    def execute_test(self, test: Dict[str, Any]) -> None:
+    def execute_test(self, test: List[Dict[str, Any]]) -> None:
         for request in test:
             make_request = REQ_TYPE_MAPPING[request["type"]]
             url = urljoin(self.endpoint_url, request["path"])
@@ -68,4 +69,3 @@ class Executor:
 
             with self._lock:
                 self.response_data.append(info)
-

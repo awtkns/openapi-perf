@@ -7,6 +7,7 @@ requests
 pandas
 matplotlib
 hypothesis
+scipy
 
 async-generator; python_version=='3.6'
 async-exit-stack; python_version=='3.6'

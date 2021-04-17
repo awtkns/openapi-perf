@@ -32,7 +32,4 @@ class RegressionResults:
         self.old = old
 
     def plot(self) -> None:
-        graphing.plot_regression(
-            self.new.results,
-            self.old.results
-        )
+        graphing.plot_regression(self.new.results, self.old.results)
