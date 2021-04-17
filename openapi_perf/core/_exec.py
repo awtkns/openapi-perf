@@ -1,6 +1,8 @@
 from typing import Dict, Any, Callable
 from urllib.parse import urljoin
 
+import concurrent.futures
+import threading
 import requests
 
 from .results import PerfResults
@@ -13,48 +15,57 @@ REQ_TYPE_MAPPING: Dict[str, Callable[[Any], Any]] = {
     "delete": requests.delete,
 }
 
+class Executor:
+    _lock: threading.Lock
+    endpoint_url: str
+    response_data: []
 
-def execute(test_schema: TestSchema) -> PerfResults:
-    endpoint_url = test_schema.endpoint_url
-    response_data = []
+    def __init__(self) -> None:
+        self._lock = threading.Lock()
 
-    # TODO: multi-thread this
-    for path_name, path_tests in test_schema.paths.items():
-        for test in path_tests:
-            for request in test:
-                make_request = REQ_TYPE_MAPPING[request["type"]]
-                url = urljoin(endpoint_url, request["path"])
+    def execute(self, test_schema: Dict[str, Any]) -> PerfResults:
+        self.endpoint_url = test_schema.endpoint_url
+        self.response_data = []
 
-                # noinspection PyArgumentList
-                print(request["data"])
-                for key in request["data"]:
-                    print(type(request["data"][key]))
+        with concurrent.futures.ThreadPoolExecutor() as tp_executor:
+            for path_name, path_tests in test_schema.paths.items():
+                for test in path_tests:
+                    for request in test:
+                        request["base_path_name"] = path_name
+                tp_executor.map(self.execute_test, path_tests)
 
-                data = request["data"]
+        return PerfResults(self.response_data)
 
-                response: requests.Response = make_request(
-                    url,
-                    json=data,
-                    headers={"Content-Type": "application/json; charset=UTF-8"},
-                )  # type: ignore
+    def execute_test(self, test: Dict[str, Any]) -> None:
+        for request in test:
+            make_request = REQ_TYPE_MAPPING[request["type"]]
+            url = urljoin(self.endpoint_url, request["path"])
 
-                info = {
-                    "type": request["type"],
-                    "path_name": path_name,
-                    "path": request["path"],
-                    "data": request["data"],
-                    "response": response,
-                    "status_code": response.status_code,
-                    "validity": str(response.status_code) in request["expected"],
-                    "time": response.elapsed.total_seconds(),
-                }
+            data = request["data"]
 
-                try:
-                    info["response_data"] = response.json()
-                except Exception:
-                    info["response_data"] = None
-                    pass
+            response: requests.Response = make_request(
+                url,
+                json=data,
+                headers={"Content-Type": "application/json; charset=UTF-8"},
+            )  # type: ignore
 
-                response_data.append(info)
+            info = {
+                "type": request["type"],
+                "path_name": request["base_path_name"],
+                "path": request["path"],
+                "data": request["data"],
+                "response": response,
+                "status_code": response.status_code,
+                "validity": str(response.status_code) in request["expected"],
+                "time": response.elapsed.total_seconds(),
+            }
 
-    return PerfResults(response_data)
+            try:
+                info["response_data"] = response.json()
+            except Exception:
+                info["response_data"] = None
+                pass
+
+            with self._lock:
+                self.response_data.append(info)
+

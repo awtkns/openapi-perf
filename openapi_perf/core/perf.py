@@ -2,7 +2,7 @@ from os import path, mkdir
 from typing import Optional
 
 from . import _utils, PerfResults
-from ._exec import execute
+from ._exec import Executor
 from ._gen import Generator
 from ._types import API_SCHEMA
 from .schemas import TestSchema
@@ -42,7 +42,7 @@ class OpenAPIPerf:
 
     # Run tests and return results
     def run(self) -> PerfResults:
-        return execute(self.test_schema)
+        return Executor().execute(self.test_schema)
 
     def write_results(self, results_dir: str) -> None:
         if not path.exists(results_dir):
