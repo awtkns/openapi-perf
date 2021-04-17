@@ -1,15 +1,11 @@
 from itertools import chain
+from typing import Tuple, Any, Optional
 
-from typing import Tuple
-import pathlib
-
-import matplotlib.pyplot as plt  # type ignore
-from cycler import cycler
-
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
-from scipy.stats import gaussian_kde
+from cycler import cycler  # type: ignore
+from scipy.stats import gaussian_kde  # type: ignore
 
 custom_cycler = cycler(color=["#30a2da", "#fc4f30"])
 plt.style.use("seaborn-whitegrid")
@@ -38,8 +34,8 @@ def get_dims(n_plots: int) -> Tuple[int, int]:
 
 
 def generate_graphs(results: pd.DataFrame) -> None:
-    df = results
-    df = df[df["time"] < 0.05]
+    df = _drop_percentiles(results).copy()
+    df["time"] = df["time"] * 1000
 
     routes: pd.DataFrame = df["path_name"].unique()
 
@@ -51,26 +47,36 @@ def generate_graphs(results: pd.DataFrame) -> None:
         ax.set_prop_cycle(custom_cycler)
 
         df[(df.path_name == route)].boxplot(
-            by=["type", "status_code"],
-            column="time",
-            rot=30,
-            ax=ax,
-            **BOXPLOT_STYLE
+            by=["type", "status_code"], column="time", rot=30, ax=ax, **BOXPLOT_STYLE
         )
 
         ax.title.set_text(f"Route: {route}")
         ax.ylabel = "Response Time (s)"
 
     fig.suptitle("OpenAPI Performance Analysis", fontsize=20)
+    fig.text(
+        0.01,
+        0.5,
+        "Response Time (ms)",
+        va="center",
+        rotation="vertical",
+        fontweight="bold",
+    )
+    plt.tight_layout()
+
     plt.tight_layout()
     plt.show()
 
 
 def _add_kde(
-        ax, data, xlim: Tuple[float, float] = None, samples: int = 1000, label: str = None
-):
+    ax: Any,
+    data: pd.DataFrame,
+    xlim: Tuple[float, float],
+    samples: int = 1000,
+    label: Optional[str] = None,
+) -> None:
     kde = gaussian_kde(data)
-    xx = np.linspace(*xlim, samples)
+    xx: np.ndarray = np.linspace(*xlim, samples)
     ax.plot(xx, kde.pdf(xx), label=label, linewidth=3)
 
 
@@ -78,11 +84,11 @@ def _get_xlim(data1: pd.Series, data2: pd.Series) -> Tuple[float, float]:
     x1 = min(data1.min(), data2.min())
     x2 = max(data1.max(), data2.max())
 
-    return x1 * 1000, x2 * 1000
+    return x1, x2
 
 
 def _drop_percentiles(
-        data: pd.DataFrame, column: str = "time", percentile: float = 0.995
+    data: pd.DataFrame, column: str = "time", percentile: float = 0.995
 ) -> pd.DataFrame:
     high = data[column].quantile(percentile)
     low = data[column].quantile(1 - percentile)
@@ -90,9 +96,11 @@ def _drop_percentiles(
     return data[(data[column] < high) & (data[column] > low)]
 
 
-def plot_regression(new: pd.DataFrame, old: pd.DataFrame):
-    new = _drop_percentiles(new)
-    old = _drop_percentiles(old)
+def plot_regression(new: pd.DataFrame, old: pd.DataFrame) -> None:
+    new = _drop_percentiles(new).copy()
+    old = _drop_percentiles(old).copy()
+    new["time"] = new["time"] * 1000
+    old["time"] = old["time"] * 1000
 
     new_routes = new.drop_duplicates(["path_name", "type"])[["path_name", "type"]]
     old_routes = old.drop_duplicates(["path_name", "type"])[["path_name", "type"]]
@@ -101,7 +109,7 @@ def plot_regression(new: pd.DataFrame, old: pd.DataFrame):
     )
 
     fig, axes = plt.subplots(
-        *get_dims(len(shared_routes)), figsize=(10, 8), sharex=True
+        *get_dims(len(shared_routes)), figsize=(10, 8), sharex="all"
     )
     axes = list(chain(*axes))  # flatten axis array
 
@@ -112,17 +120,15 @@ def plot_regression(new: pd.DataFrame, old: pd.DataFrame):
         ax_kde.set_prop_cycle(custom_cycler)
         axes.append(ax_kde)
 
-        new_time = (
-                new[(new["path_name"] == row.path_name) & (new["type"] == row.type)]["time"]
-                * 1000
-        )
-        old_time = (
-                old[(old["path_name"] == row.path_name) & (old["type"] == row.type)]["time"]
-                * 1000
-        )
-        xlim = _get_xlim(
-            new["time"], old["time"]
-        )  # TODO: Potential edge case if the min / max arent in the shared set of routes
+        new_time = new[(new["path_name"] == row.path_name) & (new["type"] == row.type)][
+            "time"
+        ]
+        old_time = old[(old["path_name"] == row.path_name) & (old["type"] == row.type)][
+            "time"
+        ]
+
+        # TODO: Potential edge case if the min / max arent in the shared set of routes
+        xlim = _get_xlim(new["time"], old["time"])
 
         # Plotting
         ax.hist(new_time, alpha=0.5, bins=20, label="New")
@@ -137,7 +143,7 @@ def plot_regression(new: pd.DataFrame, old: pd.DataFrame):
 
     fig.suptitle("OpenAPI Regression Analysis", fontsize=20)
     lines_labels = [ax.get_legend_handles_labels() for ax in axes]
-    lines, labels = [
+    lines, labels = [  # type: ignore
         sum(lol, []) for lol in zip(*lines_labels[11:13])
     ]  # TODO: THIS IS A HACK, does not generalize
     fig.legend(lines, labels, ncol=2)
