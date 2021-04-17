@@ -15,8 +15,11 @@
 
 **Documentation**: <a href="https://openapi-perf.awtkns.com" target="_blank">https://openapi-perf.awtkns.com</a>
 
+**GitHub Action**: <a href="https://github.com/awtkns/openapi-perf-action" target="_blank">https://github.com/awtkns/openapi-perf-action</a>
+
 **Source Code**: <a href="https://github.com/awtkns/openapi-perf" target="_blank">https://github.com/awtkns/openapi-perf</a>
 
+**PyPi Page**: <a href="https://pypi.org/project/openapi-perf/" target="_blank">https://pypi.org/project/openapi-perf/</a>
 
 ---
 
@@ -34,6 +37,18 @@ $ pip install openapi-perf
 
 ## Basic Usage
 ```python
-from openapi_perf import APIPerf
-# Magic
+from openapi_perf import OpenAPIPerf
+
+ENDPOINT_URL = "http://localhost:5000"
+
+if __name__ == "__main__":
+    # Generating Test Schema
+    op = OpenAPIPerf(ENDPOINT_URL)
+    
+    # Perfomance Testing
+    results = op.run()
+    
+    # Analysing Results
+    results.plot()
+    results.to_csv("results.csv")
 ```
