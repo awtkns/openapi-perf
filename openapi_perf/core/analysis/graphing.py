@@ -112,7 +112,7 @@ def plot_regression(new: pd.DataFrame, old: pd.DataFrame) -> None:
         *get_dims(len(shared_routes)), figsize=(10, 8), sharex="all"
     )
     axes = list(chain(*axes))  # flatten axis array
-
+    n = 0
     for i, (_, row) in enumerate(shared_routes.iterrows()):
         ax = axes[i]
         ax.set_prop_cycle(custom_cycler)
@@ -126,6 +126,10 @@ def plot_regression(new: pd.DataFrame, old: pd.DataFrame) -> None:
         old_time = old[(old["path_name"] == row.path_name) & (old["type"] == row.type)][
             "time"
         ]
+
+        # TODO: might want to change later
+        if len(new_time) > n:
+            n = len(new_time)
 
         # TODO: Potential edge case if the min / max arent in the shared set of routes
         xlim = _get_xlim(new["time"], old["time"])
@@ -150,7 +154,7 @@ def plot_regression(new: pd.DataFrame, old: pd.DataFrame) -> None:
     fig.autofmt_xdate(rotation=30)
 
     fig.text(0.5, 0.01, "Response Time (ms)", ha="center", fontweight="bold")
-    fig.text(0.01, 0.5, "Count", va="center", rotation="vertical", fontweight="bold")
+    fig.text(0.01, 0.5, f"Count (n={n})", va="center", rotation="vertical", fontweight="bold")
     fig.text(
         0.98,
         0.5,
