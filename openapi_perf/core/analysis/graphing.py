@@ -1,4 +1,4 @@
-from itertools import chain
+from math import ceil
 from typing import Tuple, Any, Optional
 
 import matplotlib.pyplot as plt
@@ -10,7 +10,7 @@ from scipy.stats import gaussian_kde  # type: ignore
 custom_cycler = cycler(color=["#30a2da", "#fc4f30"])
 plt.style.use("seaborn-whitegrid")
 
-# TODO Define this properly
+# TODO Define this properly, use a style sheet?
 BOXPLOT_STYLE = dict(
     boxprops=dict(linewidth=1.5, color="#30a2da"),
     flierprops=dict(marker=".", markeredgecolor="#fc4f30", markersize=3),
@@ -20,17 +20,14 @@ BOXPLOT_STYLE = dict(
 )
 
 
-def get_dims(n_plots: int) -> Tuple[int, int]:
+def get_dims(n_plots: int, cols: int = 2) -> Tuple[int, int]:
     """
     Gets the number of rows and columns for matplotlib layout
     :param n_plots: number of plots that will be plotted
-    :return: (row, col)
+    :param cols: number of columns
+    :return: (row, col), (fig_size_h, fig_size_w)
     """
-
-    if n_plots % 2:
-        n_plots = +1
-
-    return int(n_plots / 2), 2
+    return ceil(n_plots / cols), cols
 
 
 def generate_graphs(results: pd.DataFrame) -> None:
@@ -39,8 +36,9 @@ def generate_graphs(results: pd.DataFrame) -> None:
 
     routes: pd.DataFrame = df["path_name"].unique()
 
-    fig, axes = plt.subplots(*get_dims(len(routes)), figsize=(10, 8))
-    axes = list(chain(*axes))  # flatten axis array
+    rows, cols = get_dims(len(routes))
+    fig, axes = plt.subplots(rows, cols, figsize=(cols * 4, rows * 5))
+    axes = axes.flatten()
 
     for i, route in enumerate(routes):
         ax = axes[i]
@@ -62,7 +60,6 @@ def generate_graphs(results: pd.DataFrame) -> None:
         rotation="vertical",
         fontweight="bold",
     )
-    plt.tight_layout()
 
     plt.tight_layout()
     plt.show()
@@ -108,10 +105,10 @@ def plot_regression(new: pd.DataFrame, old: pd.DataFrame) -> None:
         new_routes, old_routes, how="inner", on=["path_name", "type"]
     )
 
-    fig, axes = plt.subplots(
-        *get_dims(len(shared_routes)), figsize=(10, 8), sharex="all"
-    )
-    axes = list(chain(*axes))  # flatten axis array
+    rows, cols = get_dims(len(shared_routes))
+    fig, axes = plt.subplots(rows, cols, figsize=(cols * 5, rows * 4 / 3), sharex="all")
+    axes = list(axes.flatten())
+
     n = 0
     for i, (_, row) in enumerate(shared_routes.iterrows()):
         ax = axes[i]
@@ -128,8 +125,9 @@ def plot_regression(new: pd.DataFrame, old: pd.DataFrame) -> None:
         ]
 
         # TODO: might want to change later
-        if len(new_time) > n:
-            n = len(new_time)
+        new_n = int((len(new_time) + len(old_time)) / 2)
+        if new_n > n:
+            n = new_n
 
         # TODO: Potential edge case if the min / max arent in the shared set of routes
         xlim = _get_xlim(new["time"], old["time"])
@@ -154,7 +152,9 @@ def plot_regression(new: pd.DataFrame, old: pd.DataFrame) -> None:
     fig.autofmt_xdate(rotation=30)
 
     fig.text(0.5, 0.01, "Response Time (ms)", ha="center", fontweight="bold")
-    fig.text(0.01, 0.5, f"Count (n={n})", va="center", rotation="vertical", fontweight="bold")
+    fig.text(
+        0.01, 0.5, f"Count (n={n})", va="center", rotation="vertical", fontweight="bold"
+    )
     fig.text(
         0.98,
         0.5,
