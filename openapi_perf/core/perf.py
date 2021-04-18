@@ -1,7 +1,8 @@
 from os import path, mkdir
 from typing import Optional
 
-from . import _utils, PerfResults
+from . import _utils
+from .results import PerfResults
 from ._exec import Executor
 from ._gen import Generator
 from ._types import API_SCHEMA
