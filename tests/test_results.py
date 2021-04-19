@@ -1,8 +1,10 @@
+import pytest
 from matplotlib.figure import Figure
 
 from openapi_perf import PerfResults, RegressionResults
 
 
+@pytest.mark.skip
 def test_save_load():
     pr = PerfResults.from_csv("sample_results/new.csv")
     pr.to_csv("sample_results/new2.csv")
