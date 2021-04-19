@@ -31,4 +31,3 @@ def test_regression_plot():
 
     fig = RegressionResults(new, old).plot(show=False)
     assert type(fig) is Figure
-
