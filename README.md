@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://openapi-perf.awtkns.com/assets/logo-light.png" alt="OpenAPI Perf Logo" />
+  <img src="./docs/en/docs/assets/logo-light.png" alt="OpenAPI Perf Logo" />
 </p>
 <h3 align="center" style="margin-bottom: 0; color: black"><strong>OpenAPI Perf</strong></h3>
 <p align="center">
