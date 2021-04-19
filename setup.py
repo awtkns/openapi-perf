@@ -2,6 +2,11 @@ from setuptools import setup, find_packages
 
 VERSION = "0.0.5"
 
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
+
 setup(
     name="openapi-perf",
     version=VERSION,
@@ -11,9 +16,9 @@ setup(
     url="https://github.com/awtkns/openapi-perf",
     license="MIT",
     description="An Automatic REST Endpoint Performance Test Generation Suite",
-    long_description=open("README.md").read(),
+    long_description=long_description,
     long_description_content_type="text/markdown",
-    install_requires=open("requirements.txt").read().splitlines(),
+    install_requires=required,
     python_requires=">=3.6",
     keywords=["OpenAPI", "REST", "Performance Testing"],
     classifiers=[

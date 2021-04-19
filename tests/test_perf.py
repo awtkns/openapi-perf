@@ -1,11 +1,10 @@
-from openapi_perf import OpenAPIPerf
-import pathlib
 import requests
-import pandas as pd
+
+from openapi_perf import OpenAPIPerf
+from tests import RESULTS_DIR
 
 ENDPOINT_URL = "http://localhost:5000"
 API_SCHEMA_PATH = "/openapi.json"
-RESULTS_DIR = str(pathlib.Path(__file__).parent.absolute()) + "/sample_results"
 
 
 def test_schema_endpoint_exists():
