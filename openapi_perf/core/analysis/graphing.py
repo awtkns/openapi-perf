@@ -2,6 +2,8 @@ from math import ceil
 from typing import Tuple, Any, Optional
 
 import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
+
 import numpy as np
 import pandas as pd
 from cycler import cycler  # type: ignore
@@ -30,7 +32,7 @@ def get_dims(n_plots: int, cols: int = 2) -> Tuple[int, int]:
     return ceil(n_plots / cols), cols
 
 
-def generate_graphs(results: pd.DataFrame) -> None:
+def generate_graphs(results: pd.DataFrame, show: bool = True) -> Figure:
     df = _drop_percentiles(results).copy()
     df["time"] = df["time"] * 1000
 
@@ -61,8 +63,12 @@ def generate_graphs(results: pd.DataFrame) -> None:
         fontweight="bold",
     )
 
-    plt.tight_layout()
-    plt.show()
+    fig.tight_layout()
+
+    if show:
+        fig.show()
+
+    return fig
 
 
 def _add_kde(
@@ -93,7 +99,7 @@ def _drop_percentiles(
     return data[(data[column] < high) & (data[column] > low)]
 
 
-def plot_regression(new: pd.DataFrame, old: pd.DataFrame) -> None:
+def plot_regression(new: pd.DataFrame, old: pd.DataFrame, show: bool = True) -> Figure:
     new = _drop_percentiles(new).copy()
     old = _drop_percentiles(old).copy()
     new["time"] = new["time"] * 1000
@@ -164,5 +170,9 @@ def plot_regression(new: pd.DataFrame, old: pd.DataFrame) -> None:
         fontweight="bold",
     )
 
-    plt.tight_layout(rect=(0.010, 0.025, 0.990, 0.995))
-    plt.show()
+    fig.tight_layout(rect=(0.010, 0.025, 0.990, 0.995))
+
+    if show:
+        fig.show()
+
+    return fig

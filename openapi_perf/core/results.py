@@ -1,6 +1,7 @@
 from typing import Union, Any
 
 from pandas import DataFrame, read_csv
+from matplotlib.figure import Figure
 
 from ._types import TEST_RESULTS, FILE_PATH
 from .analysis import graphing
@@ -15,15 +16,15 @@ class PerfResults:
 
     @staticmethod
     def from_csv(file_path: FILE_PATH) -> "PerfResults":
-        df = read_csv(file_path)
+        df = read_csv(file_path, index_col=None)
 
         return PerfResults(df)
 
     def to_csv(self, file_path: FILE_PATH, **kwargs: Any) -> None:
-        self.results.to_csv(file_path, **kwargs)
+        self.results.to_csv(file_path, index=False, **kwargs)
 
-    def plot(self) -> None:
-        graphing.generate_graphs(self.results)
+    def plot(self, show: bool = True) -> Figure:
+        return graphing.generate_graphs(self.results, show)
 
 
 class RegressionResults:
@@ -31,5 +32,5 @@ class RegressionResults:
         self.new = new
         self.old = old
 
-    def plot(self) -> None:
-        graphing.plot_regression(self.new.results, self.old.results)
+    def plot(self, show: bool = True) -> Figure:
+        return graphing.plot_regression(self.new.results, self.old.results, show)

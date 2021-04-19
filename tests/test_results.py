@@ -1,16 +1,28 @@
-from pytest import mark
+from matplotlib.figure import Figure
 
 from openapi_perf import PerfResults, RegressionResults
 
 
-@mark.noautofixt
+def test_save_load():
+    pr = PerfResults.from_csv("sample_results/new.csv")
+    pr.to_csv("sample_results/new2.csv")
+
+    pr2 = PerfResults.from_csv("sample_results/new2.csv")
+
+    assert pr2.results.equals(pr)
+
+
 def test_results_plot():
     new = PerfResults.from_csv("sample_results/new.csv")
-    new.plot()
+
+    fig = new.plot(show=False)
+    assert type(fig) is Figure
 
 
-@mark.noautofixt
 def test_regression_plot():
     new = PerfResults.from_csv("sample_results/new.csv")
     old = PerfResults.from_csv("sample_results/old.csv")
-    RegressionResults(new, old).plot()
+
+    fig = RegressionResults(new, old).plot(show=False)
+    assert type(fig) is Figure
+
